@@ -662,6 +662,12 @@ footer{
 .footer-meta{ font-family: var(--font-mono); font-size:.72rem; color: var(--bone-dim); letter-spacing:.05em; }
 .back-top{ font-family: var(--font-mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color: var(--bone-dim); transition: color .2s var(--ease); }
 .back-top:hover{ color: var(--rust-bright); }
+a{ color: var(--rust); text-decoration:none; transition: color .2s var(--ease); }
+a:hover{ color: var(--rust-bright); }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, .gallery-tile:focus-visible, .video-thumb:focus-visible {
+  outline: 2px solid var(--rust-bright);
+  outline-offset: 4px;
+}
 
 /* ---- Divider rule used between sections -----------------------------------------*/
 .rule{

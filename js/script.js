@@ -217,7 +217,7 @@
   }
 
   /* =======================================================================
-     Render: VIDEOS — carga automáticamente desde el canal de YouTube
+     Render: VIDEOS — lee desde data/videos.json
      ======================================================================= */
   function renderVideos() {
     var carousel = document.querySelector("[data-video-carousel]");
@@ -225,36 +225,22 @@
     var mount = document.querySelector("[data-videos-mount]");
     if (!carousel || !mainVideo) return;
 
-    var channelId = "UCby3sI-P50SgWkFLOkdqMbQ"; // ID del canal de Betrayer
-    var rssUrl = encodeURIComponent("https://www.youtube.com/feeds/videos.xml?channel_id=" + channelId);
-    var url = "https://api.rss2json.com/v1/api.json?rss_url=" + rssUrl;
-
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", url);
+    xhr.open("GET", "data/videos.json");
     xhr.onload = function () {
       if (xhr.status === 200) {
         try {
-          var data = JSON.parse(xhr.responseText);
-          if (data.status !== "ok" || !data.items || !data.items.length) return;
+          var videos = JSON.parse(xhr.responseText);
+          if (!videos || !videos.length) return;
 
           var html = "";
-          var videos = [];
-
-          data.items.forEach(function (item, idx) {
-            // El GUID de youtube viene como yt:video:ID
-            var parts = item.guid.split(":");
-            if (parts.length < 3) return;
-            var vId = parts[2];
-            videos.push(vId);
-
-            var cls = videos.length === 1 ? "video-thumb is-active" : "video-thumb";
+          videos.forEach(function (vId, idx) {
+            var cls = idx === 0 ? "video-thumb is-active" : "video-thumb";
             var thumbUrl = "https://img.youtube.com/vi/" + vId + "/maxresdefault.jpg";
-            html += '<div class="' + cls + '" data-video-id="' + vId + '" title="' + item.title + '">';
+            html += '<div class="' + cls + '" data-video-id="' + vId + '">';
             html += '<img src="' + thumbUrl + '" alt="Miniatura de video">';
             html += '</div>';
           });
-
-          if (!videos.length) return;
           carousel.innerHTML = html;
 
           // Cargar el primer video en el reproductor principal
