@@ -95,10 +95,11 @@ body::after{
 
 @media (max-width: 860px) {
   body::after {
-    background-size: 160%;
-    background-position: center 12%;
-    -webkit-mask-image: radial-gradient(ellipse at center 18%, black 25%, transparent 75%);
-    mask-image: radial-gradient(ellipse at center 18%, black 25%, transparent 75%);
+    transform: rotate(45deg) scale(1.5);
+    background-size: 110%;
+    background-position: center 30%;
+    -webkit-mask-image: radial-gradient(ellipse at center 25%, black 25%, transparent 65%);
+    mask-image: radial-gradient(ellipse at center 25%, black 25%, transparent 65%);
   }
 }
 
