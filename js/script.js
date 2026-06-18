@@ -24,16 +24,25 @@
     // { date: "2026-09-12", city: "Curicó", venue: "Nombre del local", billing: "Detalle de la fecha", ticketUrl: "https://..." },
   ];
 
-  // GALERÍA: agrega las rutas a tus fotos reales en assets/gallery/ y
-  // aparecerán automáticamente reemplazando los cuadros vacíos.
-  // Ejemplo: "assets/gallery/show-curico-01.jpg"
+  // GALERÍA: las fotos se descubren AUTOMÁTICAMENTE desde GitHub.
+  // Solo sube tus fotos a assets/gallery/, haz commit y push.
+  // Este arreglo sirve como respaldo si la API de GitHub no responde.
   var GALLERY = [
     "assets/gallery/central-bar-01.jpg",
     "assets/gallery/central-bar-03.jpg",
     "assets/gallery/central-bar-02.jpg"
-    // "assets/gallery/foto-4.jpg",
   ];
   var GALLERY_MIN_TILES = 8; // cantidad mínima de casilleros a mostrar
+
+  // FOTOS DE INTEGRANTES: también se descubren automáticamente.
+  // Nombra el archivo como el integrante (sin tildes, con guiones):
+  //   matias-bravo.jpg  →  Matías Bravo
+  //   juan-vasquez.jpg  →  Juan Vásquez
+  //   felipe-toloza.jpg →  Felipe Toloza
+  // Súbelas a assets/members/, commit y push. Listo.
+
+  // GITHUB: repo público para auto-descubrir fotos
+  var GITHUB_REPO = "deathztalker/Betrayer";
 
   // SPOTIFY: pega aquí el ID de artista de Spotify cuando lo tengas
   // (Spotify → tu perfil de artista → Compartir → Insertar artista →
@@ -68,6 +77,46 @@
       user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1-3.6 4-5.4 7-5.4s6 1.8 7 5.4"/></svg>'
     };
     return icons[name] || "";
+  }
+
+  // Normaliza un string para comparar nombres de archivo con nombres de integrantes:
+  // "Matías Bravo" → "matias-bravo", "juan-vasquez.jpg" → "juan-vasquez"
+  function normalizeStr(str) {
+    return str.toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // quitar tildes
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "");
+  }
+
+  // Consulta la API de GitHub para listar archivos de una carpeta.
+  // Usa sessionStorage como caché para no gastar el rate limit (60/hora).
+  function fetchGitHubDir(path, callback) {
+    var cacheKey = "betrayer_gh_" + path;
+    try {
+      var cached = sessionStorage.getItem(cacheKey);
+      if (cached) { callback(JSON.parse(cached)); return; }
+    } catch (e) { /* sessionStorage no disponible, seguir sin caché */ }
+
+    var url = "https://api.github.com/repos/" + GITHUB_REPO + "/contents/" + path;
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+    xhr.setRequestHeader("Accept", "application/vnd.github.v3+json");
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        try {
+          var files = JSON.parse(xhr.responseText);
+          var images = files
+            .filter(function (f) { return /\.(jpe?g|png|webp|gif)$/i.test(f.name); })
+            .map(function (f) { return f.path; }); // ej: "assets/gallery/foto.jpg"
+          try { sessionStorage.setItem(cacheKey, JSON.stringify(images)); } catch (e) {}
+          callback(images);
+        } catch (e) { callback(null); }
+      } else {
+        callback(null);
+      }
+    };
+    xhr.onerror = function () { callback(null); };
+    xhr.send();
   }
 
   /* =======================================================================
@@ -112,22 +161,69 @@
   }
 
   /* =======================================================================
-     Render: GALERÍA
+     Render: GALERÍA — auto-descubre fotos desde GitHub API
      ======================================================================= */
   function renderGallery() {
     var grid = document.querySelector("[data-gallery-grid]");
     if (!grid) return;
 
-    var total = Math.max(GALLERY.length, GALLERY_MIN_TILES);
+    // intentar auto-descubrir desde GitHub, con GALLERY como respaldo
+    fetchGitHubDir("assets/gallery", function (discovered) {
+      var photos = (discovered && discovered.length) ? discovered : GALLERY;
+      // si descubrimos fotos nuevas, actualizar GALLERY para el lightbox
+      if (discovered && discovered.length) GALLERY = discovered;
+      fillGalleryGrid(grid, photos);
+    });
+
+    // mostrar el respaldo inmediatamente mientras carga la API
+    fillGalleryGrid(grid, GALLERY);
+  }
+
+  function fillGalleryGrid(grid, photos) {
+    var total = Math.max(photos.length, GALLERY_MIN_TILES);
     var html = "";
     for (var i = 0; i < total; i++) {
-      if (GALLERY[i]) {
-        html += '<div class="gallery-tile"><img src="' + GALLERY[i] + '" alt="Betrayer en vivo" loading="lazy"></div>';
+      if (photos[i]) {
+        html += '<div class="gallery-tile"><img src="' + photos[i] + '" alt="Betrayer en vivo" loading="lazy"></div>';
       } else {
         html += '<div class="gallery-tile is-empty">' + svgIcon("camera") + "</div>";
       }
     }
     grid.innerHTML = html;
+  }
+
+  /* =======================================================================
+     Auto-match: fotos de integrantes desde assets/members/
+     Convención de nombre: matias-bravo.jpg → "Matías Bravo"
+     ======================================================================= */
+  function autoMatchMemberPhotos() {
+    fetchGitHubDir("assets/members", function (photos) {
+      if (!photos || !photos.length) return;
+
+      var cards = document.querySelectorAll(".member-card");
+      toArray(cards).forEach(function (card) {
+        var nameEl = card.querySelector(".name");
+        if (!nameEl) return;
+        var normalizedName = normalizeStr(nameEl.textContent);
+
+        // buscar una foto que coincida con el nombre
+        var match = null;
+        for (var i = 0; i < photos.length; i++) {
+          var filename = photos[i].split("/").pop().replace(/\.[^.]+$/, "");
+          if (normalizeStr(filename) === normalizedName) {
+            match = photos[i];
+            break;
+          }
+        }
+
+        if (match) {
+          var photoDiv = card.querySelector(".member-photo");
+          if (photoDiv) {
+            photoDiv.innerHTML = '<img src="' + match + '" alt="' + nameEl.textContent + '">';
+          }
+        }
+      });
+    });
   }
 
   /* =======================================================================
@@ -200,7 +296,7 @@
   }
 
   /* =======================================================================
-     Scroll reveal
+     Scroll reveal — with stagger for grid children
      ======================================================================= */
   function setupReveal() {
     var items = document.querySelectorAll(".reveal");
@@ -208,6 +304,15 @@
       toArray(items).forEach(function (el) { el.classList.add("is-visible"); });
       return;
     }
+
+    // add stagger delays to grid children
+    var grids = document.querySelectorAll(".lineup-grid, .gallery-grid, .shows-board");
+    toArray(grids).forEach(function (grid) {
+      toArray(grid.children).forEach(function (child, i) {
+        child.style.transitionDelay = (i * 80) + "ms";
+      });
+    });
+
     var obs = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
@@ -220,6 +325,208 @@
       { threshold: 0.12 }
     );
     toArray(items).forEach(function (el) { obs.observe(el); });
+  }
+
+  /* =======================================================================
+     Ember / spark particle system (hero canvas)
+     ======================================================================= */
+  function setupParticles() {
+    var hero = document.querySelector(".hero");
+    var canvas = document.querySelector(".hero-particles");
+    if (!hero || !canvas) return;
+
+    // respect reduced motion
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    var ctx = canvas.getContext("2d");
+    var particles = [];
+    var MAX_PARTICLES = 55;
+    var isVisible = true;
+    var animId;
+
+    var COLORS = [
+      { r: 163, g: 28,  b: 28  },  // blood bright
+      { r: 181, g: 87,  b: 31  },  // rust
+      { r: 211, g: 114, b: 47  },  // rust bright
+      { r: 230, g: 150, b: 60  },  // warm orange
+      { r: 200, g: 50,  b: 30  },  // hot red
+      { r: 255, g: 180, b: 80  },  // ember yellow
+    ];
+
+    function resize() {
+      canvas.width = hero.offsetWidth;
+      canvas.height = hero.offsetHeight;
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    function createParticle() {
+      var color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      return {
+        x: Math.random() * canvas.width,
+        y: canvas.height + Math.random() * 40,
+        size: Math.random() * 2.8 + 0.8,
+        speedY: -(Math.random() * 1.2 + 0.4),
+        speedX: (Math.random() - 0.5) * 0.6,
+        wobbleAmp: Math.random() * 0.5 + 0.2,
+        wobbleSpeed: Math.random() * 0.03 + 0.01,
+        wobbleOffset: Math.random() * Math.PI * 2,
+        opacity: Math.random() * 0.6 + 0.4,
+        life: 0,
+        maxLife: Math.random() * 220 + 100,
+        color: color,
+        tick: 0
+      };
+    }
+
+    // seed particles
+    for (var i = 0; i < MAX_PARTICLES; i++) {
+      var p = createParticle();
+      p.y = Math.random() * canvas.height;
+      p.life = Math.random() * p.maxLife;
+      particles.push(p);
+    }
+
+    function animate() {
+      if (!isVisible) { animId = requestAnimationFrame(animate); return; }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (var i = particles.length - 1; i >= 0; i--) {
+        var p = particles[i];
+        p.tick++;
+        p.life++;
+        p.y += p.speedY;
+        p.x += p.speedX + Math.sin(p.tick * p.wobbleSpeed + p.wobbleOffset) * p.wobbleAmp;
+
+        // fade in at start, fade out at end
+        var lifeRatio = p.life / p.maxLife;
+        var alpha = p.opacity;
+        if (lifeRatio < 0.1) alpha *= lifeRatio / 0.1;
+        if (lifeRatio > 0.7) alpha *= (1 - lifeRatio) / 0.3;
+
+        if (p.life >= p.maxLife || p.y < -10 || p.x < -10 || p.x > canvas.width + 10) {
+          particles[i] = createParticle();
+          continue;
+        }
+
+        // draw ember with glow
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.shadowBlur = p.size * 6;
+        ctx.shadowColor = "rgba(" + p.color.r + "," + p.color.g + "," + p.color.b + ",0.6)";
+        ctx.fillStyle = "rgba(" + p.color.r + "," + p.color.g + "," + p.color.b + "," + alpha + ")";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      animId = requestAnimationFrame(animate);
+    }
+
+    // only animate when hero is in viewport
+    if ("IntersectionObserver" in window) {
+      var obs = new IntersectionObserver(function (entries) {
+        isVisible = entries[0].isIntersecting;
+      }, { threshold: 0 });
+      obs.observe(hero);
+    }
+
+    animate();
+  }
+
+  /* =======================================================================
+     Gallery lightbox
+     ======================================================================= */
+  function setupLightbox() {
+    var lightbox = document.querySelector("[data-lightbox]");
+    var lbImg = document.querySelector("[data-lightbox-img]");
+    var lbClose = document.querySelector("[data-lightbox-close]");
+    var lbPrev = document.querySelector("[data-lightbox-prev]");
+    var lbNext = document.querySelector("[data-lightbox-next]");
+    var lbCounter = document.querySelector("[data-lightbox-counter]");
+    if (!lightbox || !lbImg) return;
+
+    var currentIndex = 0;
+    var realPhotos = GALLERY.filter(function (src) { return !!src; });
+
+    function open(index) {
+      if (!realPhotos.length) return;
+      currentIndex = index;
+      lbImg.src = realPhotos[currentIndex];
+      if (lbCounter) lbCounter.textContent = (currentIndex + 1) + " / " + realPhotos.length;
+      lightbox.classList.add("is-active");
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function close() {
+      lightbox.classList.remove("is-active");
+      lightbox.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    function next() {
+      currentIndex = (currentIndex + 1) % realPhotos.length;
+      lbImg.src = realPhotos[currentIndex];
+      if (lbCounter) lbCounter.textContent = (currentIndex + 1) + " / " + realPhotos.length;
+    }
+
+    function prev() {
+      currentIndex = (currentIndex - 1 + realPhotos.length) % realPhotos.length;
+      lbImg.src = realPhotos[currentIndex];
+      if (lbCounter) lbCounter.textContent = (currentIndex + 1) + " / " + realPhotos.length;
+    }
+
+    // click on gallery tiles
+    var grid = document.querySelector("[data-gallery-grid]");
+    if (grid) {
+      grid.addEventListener("click", function (e) {
+        var tile = e.target.closest(".gallery-tile:not(.is-empty)");
+        if (!tile) return;
+        var img = tile.querySelector("img");
+        if (!img) return;
+        var idx = realPhotos.indexOf(img.getAttribute("src"));
+        if (idx >= 0) open(idx);
+      });
+    }
+
+    if (lbClose) lbClose.addEventListener("click", close);
+    if (lbPrev) lbPrev.addEventListener("click", prev);
+    if (lbNext) lbNext.addEventListener("click", next);
+
+    // click outside image to close
+    lightbox.addEventListener("click", function (e) {
+      if (e.target === lightbox || e.target.classList.contains("lightbox-img-wrap")) close();
+    });
+
+    // keyboard controls
+    document.addEventListener("keydown", function (e) {
+      if (!lightbox.classList.contains("is-active")) return;
+      if (e.key === "Escape") close();
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+    });
+  }
+
+  /* =======================================================================
+     Glitch effect — auto-trigger on section titles every ~6s
+     ======================================================================= */
+  function setupGlitch() {
+    var titles = document.querySelectorAll(".section-title");
+    // set data-text attribute for pseudo-element content
+    toArray(titles).forEach(function (t) {
+      t.setAttribute("data-text", t.textContent);
+    });
+
+    // auto-glitch a random title every 5-8 seconds
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setInterval(function () {
+      var idx = Math.floor(Math.random() * titles.length);
+      var t = titles[idx];
+      t.classList.add("is-glitching");
+      setTimeout(function () { t.classList.remove("is-glitching"); }, 400);
+    }, 6000);
   }
 
   /* =======================================================================
@@ -249,5 +556,9 @@
     safe(setupNav);
     safe(setupReveal);
     safe(setupYear);
+    safe(setupParticles);
+    safe(setupLightbox);
+    safe(setupGlitch);
+    safe(autoMatchMemberPhotos);
   });
 })();
