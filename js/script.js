@@ -10,9 +10,9 @@
      CONFIG — edita aquí para actualizar tocatas, galería y Spotify
      ======================================================================= */
 
-  // TOCATAS: agrega un objeto nuevo por cada fecha. El badge "PRÓXIMA" o
-  // "REALIZADA" se calcula solo comparando con la fecha de hoy, no hay que
-  // editarlo a mano. Usa formato de fecha "AAAA-MM-DD".
+  // TOCATAS: se leen AUTOMÁTICAMENTE desde data/shows.json.
+  // Para agregar una tocata, edita ese archivo, haz commit y push.
+  // Este arreglo es respaldo por si el JSON no carga (ej: desarrollo local).
   var SHOWS = [
     {
       date: "2026-05-15",
@@ -21,7 +21,6 @@
       billing: "Season ov Treason Tour · Dogma, Suicide Nation, Monjes Blancos y Betrayer",
       ticketUrl: null
     }
-    // { date: "2026-09-12", city: "Curicó", venue: "Nombre del local", billing: "Detalle de la fecha", ticketUrl: "https://..." },
   ];
 
   // GALERÍA: las fotos se descubren AUTOMÁTICAMENTE desde GitHub.
@@ -120,13 +119,35 @@
   }
 
   /* =======================================================================
-     Render: TOCATAS
+     Render: TOCATAS — auto-carga desde data/shows.json
      ======================================================================= */
   function renderShows() {
     var board = document.querySelector("[data-shows-board]");
     if (!board) return;
 
-    var sorted = SHOWS.slice().sort(function (a, b) {
+    // mostrar respaldo inmediatamente
+    fillShowsBoard(board, SHOWS);
+
+    // intentar cargar desde JSON
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "data/shows.json");
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        try {
+          var data = JSON.parse(xhr.responseText);
+          if (data && data.length) {
+            SHOWS = data;
+            fillShowsBoard(board, SHOWS);
+          }
+        } catch (e) { /* JSON inválido, mantener el respaldo */ }
+      }
+    };
+    xhr.onerror = function () { /* sin conexión, mantener respaldo */ };
+    xhr.send();
+  }
+
+  function fillShowsBoard(board, shows) {
+    var sorted = shows.slice().sort(function (a, b) {
       return parseISODate(a.date) - parseISODate(b.date);
     });
 
@@ -139,6 +160,9 @@
       var year = d.getFullYear();
 
       html += '<article class="flyer">';
+      if (show.flyer) {
+        html += '<img class="flyer-img" src="' + show.flyer + '" alt="Afiche ' + show.venue + '" loading="lazy">';
+      }
       html += '<div class="flyer-date">' + day + " " + month + '<span class="y">' + year + "</span></div>";
       html += '<span class="flyer-status' + (future ? " is-upcoming" : "") + '">' + (future ? "Próxima" : "Realizada") + "</span>";
       html += '<h3 class="flyer-venue">' + show.venue + "</h3>";
