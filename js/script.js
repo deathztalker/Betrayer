@@ -606,6 +606,64 @@
   }
 
   /* =======================================================================
+     i18n Multi-Language System
+     ======================================================================= */
+  function setupI18n() {
+    if (typeof I18N_LANGUAGES === 'undefined') return;
+    
+    var currentLang = localStorage.getItem('betrayer_lang') || 'es';
+    var toggleBtn = document.getElementById('currentLangBtn');
+    var menuBtnList = document.querySelectorAll('.lang-menu button');
+    var flags = { es: '🇨🇱', en: '🇺🇸', de: '🇩🇪', fr: '🇫🇷', it: '🇮🇹', uk: '🇺🇦' };
+
+    function setLanguage(lang) {
+      if (!I18N_LANGUAGES[lang]) lang = 'es';
+      currentLang = lang;
+      localStorage.setItem('betrayer_lang', lang);
+      document.documentElement.lang = lang;
+      
+      if (toggleBtn) {
+        var flagSpan = toggleBtn.querySelector('.flag');
+        if (flagSpan) flagSpan.textContent = flags[lang] || flags['es'];
+      }
+      
+      var els = document.querySelectorAll('[data-i18n]');
+      for (var i = 0; i < els.length; i++) {
+        var key = els[i].getAttribute('data-i18n');
+        if (I18N_LANGUAGES[lang][key]) {
+          els[i].innerHTML = I18N_LANGUAGES[lang][key];
+        }
+      }
+      
+      var titles = document.querySelectorAll('.section-title');
+      for (var i = 0; i < titles.length; i++) {
+        titles[i].setAttribute('data-text', titles[i].textContent);
+      }
+    }
+
+    setLanguage(currentLang);
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        this.parentElement.classList.toggle('is-open');
+      });
+      document.addEventListener('click', function(e) {
+        if (!toggleBtn.parentElement.contains(e.target)) {
+          toggleBtn.parentElement.classList.remove('is-open');
+        }
+      });
+    }
+
+    for (var i = 0; i < menuBtnList.length; i++) {
+      menuBtnList[i].addEventListener('click', function() {
+        setLanguage(this.getAttribute('data-lang'));
+        if (toggleBtn) toggleBtn.parentElement.classList.remove('is-open');
+      });
+    }
+  }
+
+  /* =======================================================================
      Misc: año en footer
      ======================================================================= */
   function setupYear() {
@@ -630,6 +688,7 @@
     safe(renderGallery);
     safe(renderSpotify);
     safe(setupNav);
+    safe(setupI18n);
     safe(setupReveal);
     safe(setupYear);
     safe(setupParticles);

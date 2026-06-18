@@ -25,6 +25,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="css/style.css">
+<script src="js/lang.js"></script>
 
 <!-- Datos estructurados para buscadores -->
 <script type="application/ld+json">
@@ -55,14 +56,29 @@
     <span>Talca · Chile</span>
   </a>
   <div class="nav-links">
-    <a href="#inicio" data-nav-link>Inicio</a>
-    <a href="#la-banda" data-nav-link>La banda</a>
-    <a href="#formacion" data-nav-link>Formación</a>
-    <a href="#musica" data-nav-link>Música</a>
-    <a href="#tocatas" data-nav-link>Tocatas</a>
-    <a href="#videos" data-nav-link>Videos</a>
-    <a href="#galeria" data-nav-link>Galería</a>
-    <a href="#contacto" data-nav-link>Contacto</a>
+    <a href="#inicio" data-nav-link data-i18n="nav.inicio">Inicio</a>
+    <a href="#la-banda" data-nav-link data-i18n="nav.labanda">La banda</a>
+    <a href="#formacion" data-nav-link data-i18n="nav.formacion">Formación</a>
+    <a href="#musica" data-nav-link data-i18n="nav.musica">Música</a>
+    <a href="#tocatas" data-nav-link data-i18n="nav.tocatas">Tocatas</a>
+    <a href="#videos" data-nav-link data-i18n="nav.videos">Videos</a>
+    <a href="#galeria" data-nav-link data-i18n="nav.galeria">Galería</a>
+    <a href="#contacto" data-nav-link data-i18n="nav.contacto">Contacto</a>
+    
+    <div class="lang-dropdown">
+      <button class="lang-toggle" id="currentLangBtn">
+        <span class="flag">🇨🇱</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="lang-menu">
+        <button data-lang="es">🇨🇱 Español</button>
+        <button data-lang="en">🇺🇸 English</button>
+        <button data-lang="de">🇩🇪 Deutsch</button>
+        <button data-lang="fr">🇫🇷 Français</button>
+        <button data-lang="it">🇮🇹 Italiano</button>
+        <button data-lang="uk">🇺🇦 Українська</button>
+      </div>
+    </div>
   </div>
   <button class="nav-toggle" data-nav-toggle aria-label="Abrir menú">
     <span></span><span></span><span></span>
@@ -75,21 +91,21 @@
   <div class="hero-halftone" aria-hidden="true"></div>
   <div class="hero-inner">
     <img class="hero-logo" src="assets/logo.png" alt="Betrayer — logotipo">
-    <p class="hero-tagline"><span class="dot"></span>Thrash Metal · Talca, Chile<span class="dot"></span></p>
-    <p class="hero-sub">Riffs old school, doble guitarra filuda y actitud de barrio. Directo desde el Valle Central para machacar cualquier escenario.</p>
+    <p class="hero-tagline"><span class="dot"></span><span data-i18n="hero.tagline">Thrash Metal · Talca, Chile</span><span class="dot"></span></p>
+    <p class="hero-sub" data-i18n="hero.sub">Riffs old school, doble guitarra filuda y actitud de barrio. Directo desde el Valle Central para machacar cualquier escenario.</p>
     <div class="hero-cta">
       <a class="btn btn-primary" href="https://betrayerbanda.bandcamp.com/album/betrayer-lp" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-        Escuchar el disco
+        <span data-i18n="hero.btn.listen">Escuchar el disco</span>
       </a>
       <a class="btn btn-ghost" href="#tocatas">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
-        Ver tocatas
+        <span data-i18n="hero.btn.shows">Ver tocatas</span>
       </a>
     </div>
   </div>
   <a class="hero-scroll" href="#la-banda" aria-label="Bajar">
-    <span>Bajar</span>
+    <span data-i18n="hero.scroll">Bajar</span>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M5 13l7 7 7-7"/></svg>
   </a>
 </header>
@@ -98,23 +114,21 @@
 <section id="la-banda">
   <div class="container">
     <div class="section-head reveal">
-      <p class="eyebrow">Desde el Valle Central</p>
-      <h2 class="section-title">La banda</h2>
+      <p class="eyebrow" data-i18n="band.eyebrow">Nuestra historia</p>
+      <h2 class="section-title" data-i18n="band.title">La Banda</h2>
     </div>
     <div class="bio-grid">
       <div class="bio-text reveal">
-        <p>Betrayer es una banda de <strong>thrash metal</strong> formada en Talca, en plena Región del Maule. Riffs directos, doble guitarra filuda y una base rítmica pesada: el sonido mira derecho a la vieja escuela, con algo de groove y la actitud de tocar fuerte y sin vueltas.</p>
-        <p>Su primer larga duración, titulado simplemente «Betrayer», se grabó en Betrayer Records, en Talca, y salió el 9 de marzo de 2019 con siete cortes propios. Desde entonces la banda no ha dejado de subirse a los escenarios del underground chileno, compartiendo cartel con bandas de la región y de otras zonas del país.</p>
-        <!-- TODO (Talca): edita estos dos párrafos con la voz real de la banda,
-             historia de formación, integrantes fundadores, anécdotas, etc. -->
+        <p data-i18n="band.p1">En las tierras agrícolas del Maule no solo crece trigo. Betrayer nació en <strong>Talca</strong> de las cenizas de otras bandas locales, con un único objetivo: hacer <strong>Thrash Metal</strong> sin asco, sin modas y directo al cráneo.</p>
+        <p data-i18n="band.p2">Liricas desgarradoras, temáticas sociales e introspectivas y un sonido que te arranca los dientes. Así es Betrayer, la furia del sur.</p>
       </div>
-      <div class="fact-card reveal">
+      <div class="fact-card reveal reveal-stagger">
         <dl>
-          <dt>Origen</dt><dd>Talca, Región del Maule, Chile</dd>
-          <dt>Género</dt><dd>Thrash Metal</dd>
-          <dt>Disco</dt><dd>«Betrayer» (2019)</dd>
-          <dt>Grabado en</dt><dd>Betrayer Records, Talca</dd>
-          <dt>Estado</dt><dd>Banda activa</dd>
+          <dt data-i18n="band.dt.origen">Origen</dt><dd data-i18n="band.fact.origen">Talca, Región del Maule, Chile</dd>
+          <dt data-i18n="band.dt.genero">Género</dt><dd data-i18n="band.fact.genero">Thrash Metal</dd>
+          <dt data-i18n="band.dt.disco">Disco</dt><dd>«Betrayer» (2019)</dd>
+          <dt data-i18n="band.dt.grabado">Grabado en</dt><dd>Betrayer Records, Talca</dd>
+          <dt data-i18n="band.dt.estado">Estado</dt><dd data-i18n="band.fact.estado">Banda activa</dd>
         </dl>
       </div>
     </div>
@@ -124,17 +138,13 @@
 <hr class="rule">
 
 <!-- ============================= FORMACIÓN ============================= -->
-<section id="formacion">
+<section id="formacion" class="bg-alt">
   <div class="container">
     <div class="section-head reveal">
-      <p class="eyebrow">La formación actual</p>
-      <h2 class="section-title">Quiénes somos</h2>
+      <p class="eyebrow" data-i18n="lineup.eyebrow">La formación actual</p>
+      <h2 class="section-title" data-i18n="lineup.title">Quiénes somos</h2>
     </div>
     <div class="lineup-grid">
-
-      <!-- TODO (Talca): para poner fotos reales, reemplaza el <div class="member-photo">...svg...</div>
-           de cada integrante por: <div class="member-photo"><img src="assets/members/nombre.jpg" alt="Nombre"></div>
-           Las fotos van en assets/members/ -->
 
       <div class="member-card reveal">
         <div class="member-photo">
@@ -142,7 +152,7 @@
         </div>
         <div class="member-info">
           <span class="name">Matías Bravo</span>
-          <span class="role">Voz</span>
+          <span class="role" data-i18n="lineup.role.voz">Voz</span>
         </div>
       </div>
 
@@ -152,7 +162,7 @@
         </div>
         <div class="member-info">
           <span class="name">Juan Vásquez</span>
-          <span class="role">Guitarra</span>
+          <span class="role" data-i18n="lineup.role.guitarra">Guitarra</span>
         </div>
       </div>
 
@@ -162,7 +172,7 @@
         </div>
         <div class="member-info">
           <span class="name">Juan Pablo Rojas</span>
-          <span class="role">Guitarra</span>
+          <span class="role" data-i18n="lineup.role.guitarra">Guitarra</span>
         </div>
       </div>
 
@@ -172,7 +182,7 @@
         </div>
         <div class="member-info">
           <span class="name">Lucas Sepúlveda</span>
-          <span class="role">Bajo</span>
+          <span class="role" data-i18n="lineup.role.bajo">Bajo</span>
         </div>
       </div>
 
@@ -182,7 +192,7 @@
         </div>
         <div class="member-info">
           <span class="name">Felipe Toloza</span>
-          <span class="role">Batería</span>
+          <span class="role" data-i18n="lineup.role.bateria">Batería</span>
         </div>
       </div>
 
@@ -196,8 +206,9 @@
 <section id="musica">
   <div class="container">
     <div class="section-head reveal">
-      <p class="eyebrow">Discografía</p>
-      <h2 class="section-title">Música</h2>
+      <p class="eyebrow" data-i18n="music.eyebrow">Discografía</p>
+      <h2 class="section-title" data-i18n="music.title">Música</h2>
+      <p style="color:var(--bone-dim); max-width:600px; margin-top:.8rem" data-i18n="music.desc">Escucha nuestro material en plataformas de streaming o apóyanos directamente en Bandcamp.</p>
     </div>
 
     <div class="music-grid">
@@ -207,8 +218,8 @@
           </iframe>
         </div>
         <p class="release-meta">
-          <span class="mono-tag">Betrayer LP · 2019 · 7 tracks · ~23 min</span>
-          Grabado en Betrayer Records, Talca — febrero de 2019.
+          <span class="mono-tag" data-i18n="music.meta">Betrayer LP · 2019 · 7 tracks · ~23 min</span>
+          <span data-i18n="music.recorded">Grabado en Betrayer Records, Talca — febrero de 2019.</span>
         </p>
         <div class="stream-row">
           <a class="btn btn-ghost" href="https://betrayerbanda.bandcamp.com" target="_blank" rel="noopener">Bandcamp</a>
@@ -229,11 +240,9 @@
 
         <div class="spotify-card">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M7.5 14.2c3-1 6-1 9 .3M8 11c2.6-.8 5.4-.8 8 .2M8.6 17c2-.6 4-.6 6 .1"/></svg>
-          <p>Síguenos en Spotify para no perderte nada nuevo.</p>
-          <a class="btn btn-ghost" data-spotify-link href="#" target="_blank" rel="noopener">Abrir en Spotify</a>
+          <p data-i18n="music.spotify.text">Síguenos en Spotify para no perderte nada nuevo.</p>
+          <a class="btn btn-ghost" data-spotify-link href="#" target="_blank" rel="noopener" data-i18n="music.btn.spotify">Abrir en Spotify</a>
         </div>
-        <!-- TODO (Talca): cuando tengas el ID de artista de Spotify, pégalo en
-             js/script.js → SPOTIFY_ARTIST_ID y aquí aparecerá el reproductor. -->
         <div data-spotify-mount></div>
       </div>
     </div>
@@ -243,15 +252,14 @@
 <hr class="rule">
 
 <!-- ============================= TOCATAS ============================= -->
-<section id="tocatas">
+<section id="tocatas" class="bg-alt">
   <div class="container">
     <div class="section-head reveal">
-      <p class="eyebrow">En vivo</p>
-      <h2 class="section-title">Tocatas</h2>
-      <p>Fechas confirmadas y por confirmar.</p>
+      <p class="eyebrow" data-i18n="shows.eyebrow">En vivo</p>
+      <h2 class="section-title" data-i18n="shows.title">Tocatas</h2>
+      <p style="color:var(--bone-dim); max-width:600px; margin-top:.8rem" data-i18n="shows.desc">No te quedes fuera del mosh. Estas son nuestras fechas confirmadas.</p>
     </div>
     <div class="shows-board" data-shows-board>
-      <!-- se llena automáticamente desde js/script.js -->
     </div>
   </div>
 </section>
@@ -262,17 +270,16 @@
 <section id="videos">
   <div class="container">
     <div class="section-head reveal">
-      <p class="eyebrow">Audiovisual</p>
-      <h2 class="section-title">Videos</h2>
-      <p>Agrega los IDs de tus videos de YouTube en <code>data/videos.json</code>.</p>
+      <p class="eyebrow" data-i18n="videos.eyebrow">Audiovisual</p>
+      <h2 class="section-title" data-i18n="videos.title">Videos</h2>
+      <p style="color:var(--bone-dim); max-width:600px; margin-top:.8rem" data-i18n="videos.desc">Revisa nuestras presentaciones en vivo, sesiones y videoclips oficiales en nuestro canal de YouTube.</p>
     </div>
     <div class="videos-container reveal" data-videos-mount>
       <div class="video-main">
         <iframe id="main-video" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        <div class="video-placeholder">Agrega videos en data/videos.json</div>
+        <div class="video-placeholder" data-i18n="videos.placeholder">Agrega videos en data/videos.json</div>
       </div>
       <div class="video-carousel" data-video-carousel>
-        <!-- se llena automáticamente desde js/script.js -->
       </div>
     </div>
   </div>
@@ -281,15 +288,18 @@
 <hr class="rule">
 
 <!-- ============================= GALERÍA ============================= -->
-<section id="galeria">
+<section id="galeria" class="bg-alt">
   <div class="container">
     <div class="section-head reveal">
-      <p class="eyebrow">Backstage &amp; escenario</p>
-      <h2 class="section-title">Galería</h2>
+      <p class="eyebrow" data-i18n="gallery.eyebrow">Backstage &amp; escenario</p>
+      <h2 class="section-title" data-i18n="gallery.title">Galería</h2>
+      <p style="color:var(--bone-dim); max-width:600px; margin-top:.8rem" data-i18n="gallery.desc">Registros de la masacre en vivo. ¿Tienes fotos de la banda? ¡Mándalas por redes sociales!</p>
     </div>
     <div class="gallery-wrap reveal">
-      <div class="gallery-grid" data-gallery-grid>
-        <!-- se llena automáticamente desde js/script.js -->
+      <div class="gallery-grid" data-gallery-grid id="gallery-container">
+        <div class="gallery-empty" data-i18n="gallery.empty" style="text-align:center; color:var(--bone-dim); padding:4rem 0; width:100%; grid-column:1/-1;">
+          Buscando material fotográfico...
+        </div>
       </div>
     </div>
   </div>
@@ -301,8 +311,8 @@
 <section id="contacto">
   <div class="container">
     <div class="section-head reveal">
-      <p class="eyebrow">Booking y contacto</p>
-      <h2 class="section-title">Contacto</h2>
+      <p class="eyebrow" data-i18n="contact.eyebrow">Booking y contacto</p>
+      <h2 class="section-title" data-i18n="contact.title">Contacto</h2>
     </div>
     <div class="contact-grid">
       <div class="social-list reveal">
@@ -329,14 +339,11 @@
       </div>
 
       <div class="booking-card reveal">
-        <p>¿Quieres llevar a Betrayer a tu tocata, festival o radio? La forma más rápida de contactarnos es por Instagram o Facebook.</p>
-        <a class="btn btn-primary" href="https://www.instagram.com/betrayer_chile" target="_blank" rel="noopener">Escribir por Instagram</a>
-        <!-- TODO (Talca): si prefieres recibir consultas por correo, reemplaza
-             el href de abajo por tu email real y descomenta el botón. -->
-        <!-- <a class="btn btn-ghost" href="mailto:contacto@betrayerbanda.cl" style="margin-top:.8rem">Escribir un correo</a> -->
+        <p data-i18n="contact.msg">¿Quieres llevar a Betrayer a tu tocata, festival o radio? La forma más rápida de contactarnos es por Instagram o Facebook.</p>
+        <a class="btn btn-primary" href="https://www.instagram.com/betrayer_chile" target="_blank" rel="noopener" data-i18n="contact.btn.ig">Escribir por Instagram</a>
         <p class="loc">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.4"/></svg>
-          Talca, Región del Maule, Chile
+          <span data-i18n="contact.loc">Talca, Región del Maule, Chile</span>
         </p>
       </div>
     </div>
@@ -347,21 +354,21 @@
 <footer>
   <div class="container footer-inner">
     <img src="assets/logo.png" alt="Betrayer">
-    <span class="footer-meta">Betrayer · Talca, Maule, Chile · © <span data-year></span></span>
-    <a class="back-top" href="#inicio">Volver arriba ↑</a>
+    <span class="footer-meta" data-i18n="footer.meta">Betrayer · Talca, Maule, Chile · © <span data-year></span></span>
+    <a class="back-top" href="#inicio" data-i18n="footer.top">Volver arriba ↑</a>
   </div>
 </footer>
 
 <!-- Lightbox para galería -->
-<div class="lightbox" data-lightbox aria-hidden="true">
-  <button class="lightbox-close" data-lightbox-close aria-label="Cerrar">&times;</button>
-  <button class="lightbox-prev" data-lightbox-prev aria-label="Anterior">
+<div class="lightbox" id="lightbox" data-lightbox aria-hidden="true">
+  <button class="lightbox-close" id="lb-close" data-lightbox-close aria-label="Cerrar">&times;</button>
+  <button class="lightbox-nav lb-prev" id="lb-prev" data-lightbox-prev aria-label="Anterior">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
   </button>
   <div class="lightbox-img-wrap">
-    <img class="lightbox-img" data-lightbox-img src="" alt="Betrayer en vivo">
+    <img class="lightbox-img" id="lb-img" data-lightbox-img src="" alt="Betrayer en vivo">
   </div>
-  <button class="lightbox-next" data-lightbox-next aria-label="Siguiente">
+  <button class="lightbox-nav lb-next" id="lb-next" data-lightbox-next aria-label="Siguiente">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
   </button>
   <span class="lightbox-counter" data-lightbox-counter></span>

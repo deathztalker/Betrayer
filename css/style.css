@@ -249,6 +249,35 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .nav-links a:hover, .nav-links a.is-active{ color: var(--bone); }
 .nav-links a:hover::after, .nav-links a.is-active::after{ transform: scaleX(1); }
 
+/* ---- Language Switcher ----------------------------------------------------*/
+.lang-dropdown { position: relative; margin-left: 1rem; }
+.lang-toggle {
+  background: rgba(10,9,8,.6); border: 1px solid var(--line); color: var(--bone);
+  padding: .3rem .6rem; border-radius: 4px; display: flex; align-items: center; gap: .4rem;
+  font-family: var(--font-mono); font-size: .8rem;
+  transition: border-color .2s var(--ease), background .2s var(--ease);
+}
+.lang-toggle:hover { border-color: var(--rust-bright); background: var(--ink); }
+.lang-toggle svg { width: 14px; height: 14px; transition: transform .2s var(--ease); }
+.lang-dropdown.is-open .lang-toggle svg { transform: rotate(180deg); }
+.lang-menu {
+  position: absolute; top: calc(100% + .5rem); right: 0;
+  background: var(--ink); border: 1px solid var(--line); border-radius: 4px;
+  display: flex; flex-direction: column; min-width: 140px;
+  opacity: 0; pointer-events: none; transform: translateY(-10px);
+  transition: all .2s var(--ease);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+.lang-dropdown.is-open .lang-menu { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.lang-menu button {
+  background: none; border: none; color: var(--bone-dim);
+  padding: .6rem 1rem; text-align: left; font-family: var(--font-mono); font-size: .76rem;
+  transition: background .2s, color .2s;
+  width: 100%;
+}
+.lang-menu button:hover { background: var(--blood); color: var(--bone); }
+
 .nav-toggle{
   display:none;
   background:none; border:0; color: var(--bone);
@@ -371,9 +400,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   display:flex; flex-direction:column; align-items:center; gap:.5rem;
   color: var(--bone-dim);
   font-family: var(--font-mono); font-size: .68rem; letter-spacing:.18em; text-transform:uppercase;
-  opacity:0; animation: fadeUp .8s var(--ease) 1.2s forwards;
+  opacity:0; animation: fadeUpCenter .8s var(--ease) 1.2s forwards;
 }
 .hero-scroll svg{ width:14px; height:18px; animation: bob 1.8s ease-in-out infinite; }
+@keyframes fadeUpCenter { from{ opacity:0; transform: translate(-50%, 10px); } to{ opacity:1; transform: translate(-50%, 0); } }
 @keyframes bob{ 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(6px); } }
 
 /* ---- Reveal on scroll ---------------------------------------------------*/
