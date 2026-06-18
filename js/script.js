@@ -178,7 +178,7 @@
     html += '<article class="flyer flyer-tba">';
     html += '<span class="mono-tag" style="color:var(--rust-bright)">Próxima fecha</span>';
     html += '<h3 class="flyer-venue" style="margin-top:.6rem">Por anunciar</h3>';
-    html += '<p class="flyer-bill" style="border-top:none;padding-top:.4rem">Síguenos en Instagram y Facebook para enterarte de nuevas tocatas.</p>';
+    html += '<p class="flyer-bill" style="border-top:none;padding-top:.4rem">Síguenos en <a href="https://www.instagram.com/betrayer_chile/" target="_blank" rel="noopener" class="link-ig">Instagram</a> y <a href="https://www.facebook.com/betrayerbanda" target="_blank" rel="noopener" class="link-fb">Facebook</a> para enterarte de nuevas tocatas.</p>';
     html += "</article>";
 
     board.innerHTML = html;
