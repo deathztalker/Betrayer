@@ -257,6 +257,31 @@
 
 <hr class="rule">
 
+<!-- ============================= VIDEOS ============================= -->
+<section id="videos">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Audiovisual</p>
+      <h2 class="section-title">Videos</h2>
+      <p>Sube tus archivos de video a <code>assets/videos/</code> y aparecerán aquí automáticamente.</p>
+    </div>
+    <div class="videos-container reveal" data-videos-mount>
+      <div class="video-main">
+        <video id="main-video" controls poster="assets/og-image.jpg">
+          <source src="" type="video/mp4">
+          Tu navegador no soporta videos HTML5.
+        </video>
+        <div class="video-placeholder">No hay videos en la carpeta assets/videos/</div>
+      </div>
+      <div class="video-carousel" data-video-carousel>
+        <!-- se llena automáticamente desde js/script.js -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
 <!-- ============================= GALERÍA ============================= -->
 <section id="galeria">
   <div class="container">
@@ -264,8 +289,10 @@
       <p class="eyebrow">Backstage &amp; escenario</p>
       <h2 class="section-title">Galería</h2>
     </div>
-    <div class="gallery-grid" data-gallery-grid>
-      <!-- se llena automáticamente desde js/script.js -->
+    <div class="gallery-wrap reveal">
+      <div class="gallery-grid" data-gallery-grid>
+        <!-- se llena automáticamente desde js/script.js -->
+      </div>
     </div>
   </div>
 </section>

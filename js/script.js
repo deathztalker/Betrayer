@@ -104,11 +104,11 @@
       if (xhr.status === 200) {
         try {
           var files = JSON.parse(xhr.responseText);
-          var images = files
-            .filter(function (f) { return /\.(jpe?g|png|webp|gif)$/i.test(f.name); })
-            .map(function (f) { return f.path; }); // ej: "assets/gallery/foto.jpg"
-          try { sessionStorage.setItem(cacheKey, JSON.stringify(images)); } catch (e) {}
-          callback(images);
+          var items = files
+            .filter(function (f) { return /\.(jpe?g|png|webp|gif|mp4|webm)$/i.test(f.name); })
+            .map(function (f) { return f.path; });
+          try { sessionStorage.setItem(cacheKey, JSON.stringify(items)); } catch (e) {}
+          callback(items);
         } catch (e) { callback(null); }
       } else {
         callback(null);
@@ -214,6 +214,51 @@
       }
     }
     grid.innerHTML = html;
+  }
+
+  /* =======================================================================
+     Render: VIDEOS — auto-descubre desde assets/videos/
+     ======================================================================= */
+  function renderVideos() {
+    var carousel = document.querySelector("[data-video-carousel]");
+    var mainVideo = document.getElementById("main-video");
+    var mount = document.querySelector("[data-videos-mount]");
+    if (!carousel || !mainVideo) return;
+
+    fetchGitHubDir("assets/videos", function (videos) {
+      if (!videos || !videos.length) return; // Se muestra el placeholder
+
+      // Asegurar que son videos
+      videos = videos.filter(function (v) { return /\.(mp4|webm)$/i.test(v); });
+      if (!videos.length) return;
+
+      var html = "";
+      videos.forEach(function (v, idx) {
+        var cls = idx === 0 ? "video-thumb is-active" : "video-thumb";
+        html += '<div class="' + cls + '" data-video-src="' + v + '">';
+        // El thumb es un video mutado sin controles que solo muestra el frame 0.1s
+        html += '<video src="' + v + '#t=0.1" muted playsinline preload="metadata"></video>';
+        html += '</div>';
+      });
+      carousel.innerHTML = html;
+
+      // Cargar el primer video en el reproductor principal
+      mainVideo.src = videos[0];
+
+      // Manejar clics en el carrusel
+      carousel.addEventListener("click", function (e) {
+        var thumb = e.target.closest(".video-thumb");
+        if (!thumb) return;
+        var src = thumb.getAttribute("data-video-src");
+        if (src) {
+          mainVideo.src = src;
+          mainVideo.play().catch(function() {});
+          var allThumbs = carousel.querySelectorAll(".video-thumb");
+          toArray(allThumbs).forEach(function(t) { t.classList.remove("is-active"); });
+          thumb.classList.add("is-active");
+        }
+      });
+    });
   }
 
   /* =======================================================================
@@ -584,5 +629,6 @@
     safe(setupLightbox);
     safe(setupGlitch);
     safe(autoMatchMemberPhotos);
+    safe(renderVideos);
   });
 })();
