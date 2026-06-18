@@ -325,10 +325,14 @@
     var nav = document.querySelector("[data-nav]");
     var toggle = document.querySelector("[data-nav-toggle]");
     var links = document.querySelectorAll("[data-nav-link]");
+    var backTopFloat = document.querySelector(".back-top-float");
     if (!nav) return;
 
     function onScroll() {
       nav.classList.toggle("is-scrolled", window.scrollY > 30);
+      if (backTopFloat) {
+        backTopFloat.classList.toggle("is-visible", window.scrollY > 500);
+      }
     }
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });

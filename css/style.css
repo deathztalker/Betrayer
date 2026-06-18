@@ -85,9 +85,9 @@ body::before{
 section{ position: relative; padding: var(--section-pad) 0; }
 
 /* ---- Focus accessibility ------------------------------------------------*/
-a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
-  outline: 2px solid var(--rust-bright);
-  outline-offset: 3px;
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, .gallery-tile:focus-visible, .video-thumb:focus-visible{
+  outline: 3px solid var(--blood);
+  outline-offset: 4px;
 }
 
 /* ---- Typography helpers --------------------------------------------------*/
@@ -315,6 +315,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 .hero-logo:hover {
   cursor: pointer;
+  opacity: 1;
   animation: logo-tremor 0.1s infinite, logo-flare 1s alternate infinite;
 }
 @keyframes heroLogoIn{ to{ opacity:1; transform: scale(1) translateY(0); } }
@@ -686,10 +687,6 @@ footer{
 .back-top:hover{ color: var(--rust-bright); }
 a{ color: var(--rust); text-decoration:none; transition: color .2s var(--ease); }
 a:hover{ color: var(--rust-bright); }
-a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, .gallery-tile:focus-visible, .video-thumb:focus-visible {
-  outline: 2px solid var(--rust-bright);
-  outline-offset: 4px;
-}
 
 /* ---- Divider rule used between sections -----------------------------------------*/
 .rule{
@@ -761,26 +758,45 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   color: var(--bone-dim);
 }
 
-/* ---- Floating WhatsApp button ---------------------------------------------------*/
-.wsp-float{
-  position:fixed; bottom: 1.8rem; right: 1.8rem;
+/* ---- Floating Actions (WhatsApp & Back to top) ---- */
+.floating-actions {
+  position: fixed; bottom: 1.8rem; right: 1.8rem;
   z-index: 900;
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+}
+
+.back-top-float {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--ink-soft); border: 1px solid var(--line); color: var(--bone);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .3s var(--ease);
+  opacity: 0; pointer-events: none; transform: translateY(15px);
+}
+.back-top-float.is-visible {
+  opacity: 1; pointer-events: auto; transform: translateY(0);
+}
+.back-top-float:hover {
+  background: var(--rust-bright); border-color: var(--rust-bright); color: var(--ink);
+  transform: scale(1.1);
+}
+.back-top-float svg { width: 22px; height: 22px; }
+
+.wsp-float {
   width: 56px; height: 56px;
-  background: #25D366;
+  background: #25D366; color: #fff;
   border-radius: 50%;
-  display:flex; align-items:center; justify-content:center;
+  display: flex; align-items: center; justify-content: center;
   box-shadow: 0 4px 16px rgba(37,211,102,.35), 0 2px 6px rgba(0,0,0,.3);
   transition: transform .3s var(--ease), box-shadow .3s var(--ease);
   animation: wspPulse 2.5s ease-in-out infinite;
 }
-.wsp-float:hover{
+.wsp-float:hover {
   transform: scale(1.1);
   box-shadow: 0 6px 24px rgba(37,211,102,.5), 0 4px 10px rgba(0,0,0,.3);
   animation: none;
 }
-.wsp-float svg{
-  width: 28px; height: 28px; color: #fff;
-}
+.wsp-float svg { width: 28px; height: 28px; color: #fff; }
+
 @keyframes wspPulse{
   0%,100%{ box-shadow: 0 4px 16px rgba(37,211,102,.35), 0 0 0 0 rgba(37,211,102,.3); }
   50%{ box-shadow: 0 4px 16px rgba(37,211,102,.35), 0 0 0 12px rgba(37,211,102,0); }
@@ -856,9 +872,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .lightbox-next{ right: .5rem; }
   .lightbox-prev, .lightbox-next{ width:40px; height:40px; }
 
-  /* WhatsApp float */
-  .wsp-float{ width: 50px; height: 50px; bottom: 1.2rem; right: 1.2rem; }
+  /* Floating Actions */
+  .floating-actions{ bottom: 1.2rem; right: 1.2rem; }
+  .wsp-float{ width: 50px; height: 50px; }
   .wsp-float svg{ width: 24px; height: 24px; }
+  .back-top-float{ width: 40px; height: 40px; }
 }
 
 @media (max-width: 480px){
