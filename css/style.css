@@ -93,6 +93,15 @@ body::after{
   mask-image: radial-gradient(circle at center, black 30%, transparent 95%);
 }
 
+@media (max-width: 860px) {
+  body::after {
+    background-size: 160%;
+    background-position: center 12%;
+    -webkit-mask-image: radial-gradient(ellipse at center 18%, black 25%, transparent 75%);
+    mask-image: radial-gradient(ellipse at center 18%, black 25%, transparent 75%);
+  }
+}
+
 .container{
   width: 100%;
   max-width: var(--container);
