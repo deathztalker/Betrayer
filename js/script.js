@@ -614,7 +614,7 @@
     var currentLang = localStorage.getItem('betrayer_lang') || 'es';
     var toggleBtn = document.getElementById('currentLangBtn');
     var menuBtnList = document.querySelectorAll('.lang-menu button');
-    var labels = { es: 'ES', en: 'EN', de: 'DE', fr: 'FR', it: 'IT', uk: 'UK' };
+    var flags = { es: '🇨🇱', en: '🇺🇸', de: '🇩🇪', fr: '🇫🇷', it: '🇮🇹', uk: '🇺🇦' };
 
     function setLanguage(lang) {
       if (!I18N_LANGUAGES[lang]) lang = 'es';
@@ -624,7 +624,7 @@
       
       if (toggleBtn) {
         var flagSpan = toggleBtn.querySelector('.flag');
-        if (flagSpan) flagSpan.textContent = labels[lang] || labels['es'];
+        if (flagSpan) flagSpan.textContent = flags[lang] || flags['es'];
       }
       
       var els = document.querySelectorAll('[data-i18n]');
