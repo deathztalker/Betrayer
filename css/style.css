@@ -339,7 +339,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   letter-spacing: .25em;
   text-transform: uppercase;
   color: var(--bone);
-  display:flex; align-items:center; gap: .9rem;
+  display:flex; align-items:center; justify-content: center; gap: .9rem; flex-wrap: wrap; text-align: center;
   opacity:0; animation: fadeUp .8s var(--ease) .6s forwards;
   text-shadow: 0 0 10px rgba(255,50,10,.5);
 }
@@ -861,10 +861,25 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .wsp-float svg{ width: 24px; height: 24px; }
 }
 
+@media (max-width: 480px){
+  .hero-inner { padding: 0 1rem; }
+  .hero-tagline { font-size: 0.85rem; justify-content: center; }
+  .hero-sub { font-size: 1rem; }
+  .bio-grid { gap: 2rem; }
+  .fact-card { padding: 1.2rem; }
+  .music-card { padding: 1.5rem; }
+  .shows-board { gap: 2rem; }
+  .flyer { padding: 1.5rem; }
+  .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+  .contact-grid { gap: 1.5rem; }
+  .social-row { padding: 1rem; gap: 0.8rem; }
+  .social-row svg { width: 24px; height: 24px; }
+  .social-row .label { font-size: 0.95rem; }
+}
+
 @media (max-width: 380px){
   .lineup-grid{ grid-template-columns: 1fr; }
   .hero-tagline .dot{ display: none; }
-  .hero-tagline{ justify-content: center; }
   .flyer-date{ font-size: 1.1rem; }
   .flyer-venue{ font-size: 1.05rem; }
   .gallery-grid{ grid-template-columns: repeat(2, 1fr); gap: .6rem; }
