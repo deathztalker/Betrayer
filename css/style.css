@@ -237,7 +237,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   text-transform: uppercase;
   color: var(--bone-dim);
   position: relative;
-  padding: .3rem 0;
+  padding: .3rem .4rem;
+  border-radius: 4px;
   transition: color .2s var(--ease);
 }
 .nav-links a::after{
