@@ -263,15 +263,12 @@
     <div class="section-head reveal">
       <p class="eyebrow">Audiovisual</p>
       <h2 class="section-title">Videos</h2>
-      <p>Sube tus archivos de video a <code>assets/videos/</code> y aparecerán aquí automáticamente.</p>
+      <p>Agrega los IDs de tus videos de YouTube en <code>data/videos.json</code> y aparecerán aquí automáticamente.</p>
     </div>
     <div class="videos-container reveal" data-videos-mount>
       <div class="video-main">
-        <video id="main-video" controls poster="assets/og-image.jpg">
-          <source src="" type="video/mp4">
-          Tu navegador no soporta videos HTML5.
-        </video>
-        <div class="video-placeholder">No hay videos en la carpeta assets/videos/</div>
+        <iframe id="main-video" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <div class="video-placeholder">Agrega videos en data/videos.json</div>
       </div>
       <div class="video-carousel" data-video-carousel>
         <!-- se llena automáticamente desde js/script.js -->

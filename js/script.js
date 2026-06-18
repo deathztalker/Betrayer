@@ -217,7 +217,7 @@
   }
 
   /* =======================================================================
-     Render: VIDEOS — auto-descubre desde assets/videos/
+     Render: VIDEOS — lee desde data/videos.json
      ======================================================================= */
   function renderVideos() {
     var carousel = document.querySelector("[data-video-carousel]");
@@ -225,40 +225,43 @@
     var mount = document.querySelector("[data-videos-mount]");
     if (!carousel || !mainVideo) return;
 
-    fetchGitHubDir("assets/videos", function (videos) {
-      if (!videos || !videos.length) return; // Se muestra el placeholder
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "data/videos.json");
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        try {
+          var videos = JSON.parse(xhr.responseText);
+          if (!videos || !videos.length) return;
 
-      // Asegurar que son videos
-      videos = videos.filter(function (v) { return /\.(mp4|webm)$/i.test(v); });
-      if (!videos.length) return;
+          var html = "";
+          videos.forEach(function (vId, idx) {
+            var cls = idx === 0 ? "video-thumb is-active" : "video-thumb";
+            var thumbUrl = "https://img.youtube.com/vi/" + vId + "/maxresdefault.jpg";
+            html += '<div class="' + cls + '" data-video-id="' + vId + '">';
+            html += '<img src="' + thumbUrl + '" alt="Miniatura de video">';
+            html += '</div>';
+          });
+          carousel.innerHTML = html;
 
-      var html = "";
-      videos.forEach(function (v, idx) {
-        var cls = idx === 0 ? "video-thumb is-active" : "video-thumb";
-        html += '<div class="' + cls + '" data-video-src="' + v + '">';
-        // El thumb es un video mutado sin controles que solo muestra el frame 0.1s
-        html += '<video src="' + v + '#t=0.1" muted playsinline preload="metadata"></video>';
-        html += '</div>';
-      });
-      carousel.innerHTML = html;
+          // Cargar el primer video en el reproductor principal
+          mainVideo.src = "https://www.youtube.com/embed/" + videos[0] + "?autoplay=0";
 
-      // Cargar el primer video en el reproductor principal
-      mainVideo.src = videos[0];
-
-      // Manejar clics en el carrusel
-      carousel.addEventListener("click", function (e) {
-        var thumb = e.target.closest(".video-thumb");
-        if (!thumb) return;
-        var src = thumb.getAttribute("data-video-src");
-        if (src) {
-          mainVideo.src = src;
-          mainVideo.play().catch(function() {});
-          var allThumbs = carousel.querySelectorAll(".video-thumb");
-          toArray(allThumbs).forEach(function(t) { t.classList.remove("is-active"); });
-          thumb.classList.add("is-active");
-        }
-      });
-    });
+          // Manejar clics en el carrusel
+          carousel.addEventListener("click", function (e) {
+            var thumb = e.target.closest(".video-thumb");
+            if (!thumb) return;
+            var vId = thumb.getAttribute("data-video-id");
+            if (vId) {
+              mainVideo.src = "https://www.youtube.com/embed/" + vId + "?autoplay=1";
+              var allThumbs = carousel.querySelectorAll(".video-thumb");
+              toArray(allThumbs).forEach(function(t) { t.classList.remove("is-active"); });
+              thumb.classList.add("is-active");
+            }
+          });
+        } catch (e) {}
+      }
+    };
+    xhr.send();
   }
 
   /* =======================================================================
