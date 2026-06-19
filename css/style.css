@@ -1501,3 +1501,70 @@ a:hover{ color: var(--rust-bright); }
   }
 }
 
+/* =========================================================================
+   VISUAL OVERHAUL: SCROLLBAR, CURSOR, PRELOADER
+   ========================================================================= */
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ink);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--rust-dim);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--rust-bright);
+}
+
+/* Custom Cursor (hidden by default on touch devices) */
+@media (pointer: fine) {
+  body {
+    cursor: none;
+  }
+  a, button, .member-card, .gallery-tile, .lb-nav, .lb-close, .member-modal-close, input, textarea {
+    cursor: none !important;
+  }
+  #custom-cursor {
+    position: fixed;
+    top: 0; left: 0;
+    width: 20px; height: 20px;
+    border: 2px solid var(--rust-bright);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 99999;
+    transition: width 0.2s, height 0.2s, background-color 0.2s, mix-blend-mode 0.2s;
+    mix-blend-mode: exclusion;
+  }
+  #custom-cursor.hover {
+    width: 50px; height: 50px;
+    background-color: rgba(211, 114, 47, 0.2);
+    border-color: transparent;
+  }
+}
+
+/* Preloader */
+#preloader {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: var(--ink);
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+#preloader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+#preloader .logo {
+  max-width: 200px;
+  animation: glitch-anim 2s infinite linear alternate-reverse;
+}
+
+

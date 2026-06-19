@@ -931,6 +931,43 @@
   });
 
   /* =======================================================================
+     Visual Overhaul: Preloader & Custom Cursor
+     ======================================================================= */
+  function setupVisualOverhaul() {
+    // 1. Preloader
+    window.addEventListener("load", function() {
+      var preloader = document.getElementById("preloader");
+      if (preloader) {
+        setTimeout(function() {
+          preloader.classList.add("hidden");
+          setTimeout(function() {
+            preloader.style.display = "none";
+          }, 500); // Wait for transition to finish
+        }, 500); // 500ms minimum display time for the cool glitch
+      }
+    });
+
+    // 2. Custom Cursor (magnetic effect)
+    var cursor = document.getElementById("custom-cursor");
+    if (cursor && window.matchMedia("(pointer: fine)").matches) {
+      document.addEventListener("mousemove", function(e) {
+        cursor.style.left = e.clientX + "px";
+        cursor.style.top = e.clientY + "px";
+      });
+
+      var hoverElements = document.querySelectorAll("a, button, .member-card, .gallery-tile, .lb-nav, .lb-close, .member-modal-close, input, textarea");
+      hoverElements.forEach(function(el) {
+        el.addEventListener("mouseenter", function() {
+          cursor.classList.add("hover");
+        });
+        el.addEventListener("mouseleave", function() {
+          cursor.classList.remove("hover");
+        });
+      });
+    }
+  }
+
+  /* =======================================================================
      Init
      ======================================================================= */
   // Mark JS as available as early as possible so the CSS-based reveal
@@ -956,5 +993,6 @@
     safe(autoMatchMemberPhotos);
     safe(renderVideos);
     safe(setupCarousels);
+    safe(setupVisualOverhaul);
   });
 })();
