@@ -83,7 +83,7 @@ body::after{
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background-image: url("../assets/caratula.jpg");
+  background-image: url("../assets/caratula.webp");
   background-size: cover;
   background-position: center 25%;
   background-repeat: no-repeat;
@@ -1499,6 +1499,21 @@ a:hover{ color: var(--rust-bright); }
   .member-modal-right h3 {
     font-size: 1.8rem;
   }
+}
+
+/* =========================================================================
+   UTILITIES & TYPOGRAPHY
+   ========================================================================= */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 /* =========================================================================

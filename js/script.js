@@ -941,7 +941,7 @@
         setTimeout(function() {
           preloader.classList.add("hidden");
           setTimeout(function() {
-            preloader.style.display = "none";
+            preloader.remove(); // Removed from DOM
           }, 500); // Wait for transition to finish
         }, 500); // 500ms minimum display time for the cool glitch
       }
