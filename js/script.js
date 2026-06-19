@@ -585,8 +585,9 @@
             
             ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
             var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-            grad.addColorStop(0, 'rgba(20, 20, 20, 0.12)');
-            grad.addColorStop(1, 'rgba(20, 20, 20, 0)');
+            // Hacer humo ms brillante (gris claro/blanco)
+            grad.addColorStop(0, 'rgba(255, 255, 255, 0.035)');
+            grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
             ctx.fillStyle = grad;
             ctx.fill();
           }
@@ -602,29 +603,31 @@
             
             ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
             ctx.fillStyle = "#ffffff";
-            ctx.globalAlpha = (Math.sin(p.life) + 1) * 0.15;
+            // Aumentar opacidad del polvo
+            ctx.globalAlpha = (Math.sin(p.life) + 1) * 0.4;
             ctx.fill();
           }
           ctx.globalAlpha = 1;
 
         } else if (type === "static") {
-          ctx.fillStyle = "rgba(0,0,0,0.06)";
-          if (Math.random() > 0.5) {
-            for(var i=0; i<8; i++){
+          // Esttica ms visible (blanca)
+          ctx.fillStyle = "rgba(255,255,255,0.03)";
+          if (Math.random() > 0.3) {
+            for(var i=0; i<15; i++){
               var y = Math.random() * h;
-              var th = Math.random() * 3 + 1;
+              var th = Math.random() * 4 + 1;
               ctx.fillRect(0, y, w, th);
             }
           }
 
         } else if (type === "noise") {
-          // Extremely cheap noise approximation using tiny rects
-          ctx.fillStyle = "rgba(255,255,255,0.015)";
-          for(var i=0; i<80; i++) {
+          // Grano fotogrfico ms denso y visible
+          ctx.fillStyle = "rgba(255,255,255,0.03)";
+          for(var i=0; i<150; i++) {
              ctx.fillRect(Math.random()*w, Math.random()*h, Math.random()*3+1, Math.random()*3+1);
           }
-          ctx.fillStyle = "rgba(0,0,0,0.02)";
-          for(var i=0; i<80; i++) {
+          ctx.fillStyle = "rgba(0,0,0,0.1)";
+          for(var i=0; i<150; i++) {
              ctx.fillRect(Math.random()*w, Math.random()*h, Math.random()*3+1, Math.random()*3+1);
           }
 
@@ -632,7 +635,8 @@
           var radius = Math.max(w, h) * 0.8;
           var pulse = (Math.sin(state.time * 0.5) + 1) * 0.5; // 0 to 1
           var grad = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, radius + (pulse * 80));
-          grad.addColorStop(0, 'rgba(163, 28, 28, ' + (0.04 + pulse * 0.03) + ')');
+          // Latido rojo ms fuerte
+          grad.addColorStop(0, 'rgba(200, 20, 20, ' + (0.08 + pulse * 0.08) + ')');
           grad.addColorStop(1, 'transparent');
           ctx.fillStyle = grad;
           ctx.fillRect(0, 0, w, h);
