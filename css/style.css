@@ -1241,7 +1241,7 @@ a:hover{ color: var(--rust-bright); }
   /* Lightbox */
   .lb-prev{ left: .5rem; }
   .lb-next{ right: .5rem; }
-  .lb-prev, .lb-next{ width:40px; height:40px; }
+  .lb-prev, .lb-next{ width:40px; height:40px; top: 35%; }
   
   .lightbox-content {
     flex-direction: column;
@@ -1252,12 +1252,13 @@ a:hover{ color: var(--rust-bright); }
   }
   .lightbox-social {
     width: 100%;
-    flex: 1 1 200px; /* Take up remaining space, but have a minimum height */
-    border-left: 1px solid var(--line);
-    border-top: none;
+    flex: 1 1 200px;
+    border-left: none;
+    border-top: 1px solid var(--line);
+    padding: 1rem;
   }
   .lightbox-img {
-    max-height: 50vh; /* Limit image height on mobile to leave room for comments */
+    max-height: 45vh; /* Limit image height on mobile to leave room for comments */
   }
 
   /* Floating Actions */
