@@ -1651,3 +1651,55 @@ body.thrash-mode {
 }
 
 
+/* ============================= TOAST NOTIFICATIONS ============================= */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--ink);
+  border: 1px solid var(--line);
+  color: var(--bone);
+  padding: 12px 20px;
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast.offline {
+  border-left: 4px solid var(--rust);
+}
+
+.toast.online {
+  border-left: 4px solid #2ecc71;
+}
+
+.toast-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toast-icon svg {
+  width: 18px;
+  height: 18px;
+}
