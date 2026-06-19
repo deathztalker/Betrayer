@@ -1,0 +1,51 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Permitir leer todo públicamente
+    match /{document=**} {
+      allow read: if true;
+    }
+    
+    // Reglas para la colección de fotos (likes)
+    match /photos/{photoId} {
+      // Cualquiera puede leer los likes
+      allow read: if true;
+      
+      // Para actualizar likes, el usuario debe estar autenticado (anónimamente en nuestro caso)
+      // Solo permitimos modificar los campos "likes" y "likedBy"
+      allow update: if request.auth != null
+                    && request.resource.data.diff(resource.data).affectedKeys()
+                        .hasOnly(['likes', 'likedBy']);
+      
+      // Permitir crear el documento de la foto si no existe (al dar el primer like)
+      allow create: if request.auth != null
+                    && request.resource.data.keys().hasOnly(['likes', 'likedBy'])
+                    && request.resource.data.likes == 1
+                    && request.resource.data.likedBy[0] == request.auth.uid;
+      
+      // Reglas para la subcolección de comentarios
+      match /comments/{commentId} {
+        // Cualquiera puede leer comentarios
+        allow read: if true;
+        
+        // Solo usuarios autenticados pueden crear comentarios
+        allow create: if request.auth != null
+                      // El comentario no puede estar vacío y el texto debe ser corto (< 500 chars)
+                      && request.resource.data.text is string
+                      && request.resource.data.text.size() > 0
+                      && request.resource.data.text.size() <= 500
+                      // El nombre es obligatorio (nuestro código envía "Anónimo" por defecto) y corto
+                      && request.resource.data.name is string
+                      && request.resource.data.name.size() <= 40
+                      // El uid debe coincidir con el del usuario que hace la petición
+                      && request.resource.data.uid == request.auth.uid
+                      // Debe tener timestamp del servidor
+                      && request.resource.data.createdAt == request.time;
+                      
+        // No permitimos editar ni borrar comentarios desde la web (solo desde la consola de Firebase)
+        allow update, delete: if false;
+      }
+    }
+  }
+}

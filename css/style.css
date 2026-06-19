@@ -819,18 +819,29 @@ a:hover{ color: var(--rust-bright); }
 .lightbox{
   position:fixed; top:0; left:0; right:0; bottom:0; inset:0;
   z-index: 1000;
-  background: rgba(10,9,8,.94);
+  background: rgba(10,9,8,.96);
   backdrop-filter: blur(8px);
   display:flex; align-items:center; justify-content:center;
   opacity:0; visibility:hidden;
   transition: opacity .35s var(--ease), visibility .35s var(--ease);
+  padding: 2rem;
 }
 .lightbox.is-active{
   opacity:1; visibility:visible;
 }
-.lightbox-img-wrap{
+
+.lightbox-content {
+  display: flex; align-items: stretch;
   max-width: 90vw; max-height: 85vh;
+  width: 100%;
+  gap: 0;
+}
+
+.lightbox-img-wrap{
+  flex: 1 1 auto;
   display:flex; align-items:center; justify-content:center;
+  min-width: 0;
+  overflow: hidden;
 }
 .lightbox-img{
   max-width: 100%; max-height: 85vh;
@@ -843,6 +854,162 @@ a:hover{ color: var(--rust-bright); }
 .lightbox.is-active .lightbox-img{
   transform: scale(1); opacity:1;
 }
+
+/* Social Panel */
+.lightbox-social {
+  width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--ink-soft);
+  border: 1px solid var(--line);
+  border-left: none;
+  overflow: hidden;
+}
+
+.lb-social-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .8rem 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.lb-like-btn {
+  display: flex; align-items: center; gap: .5rem;
+  background: none; border: 1px solid var(--line);
+  color: var(--bone-dim);
+  padding: .4rem .8rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: .85rem;
+  cursor: pointer;
+  transition: all .2s var(--ease);
+}
+.lb-like-btn:hover { border-color: var(--blood-bright); color: var(--bone); }
+.lb-like-btn.is-liked { border-color: var(--blood-bright); color: #ff4757; }
+.lb-like-btn.is-liked .lb-heart { fill: #ff4757; stroke: #ff4757; }
+.lb-heart {
+  width: 18px; height: 18px;
+  fill: none; stroke: currentColor; stroke-width: 2;
+  transition: all .2s var(--ease);
+}
+.lb-like-btn.lb-like-pop {
+  animation: likePop .4s var(--ease);
+}
+@keyframes likePop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.lb-social-header .lightbox-counter {
+  position: static; transform: none;
+  font-family: var(--font-mono); font-size: .75rem;
+  color: var(--bone-dim); letter-spacing: .08em;
+}
+
+/* Comments List */
+.lb-comments-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: .8rem 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rust) transparent;
+}
+.lb-comments-list::-webkit-scrollbar { width: 4px; }
+.lb-comments-list::-webkit-scrollbar-thumb { background: var(--rust); border-radius: 2px; }
+
+.lb-comments-empty {
+  color: var(--bone-dim);
+  font-size: .85rem;
+  text-align: center;
+  padding: 2rem 0;
+  opacity: .6;
+}
+
+.lb-comment {
+  padding: .7rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.lb-comment:last-child { border-bottom: none; }
+.lb-comment-meta {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: .3rem;
+}
+.lb-comment-meta strong {
+  font-family: var(--font-mono);
+  font-size: .78rem;
+  color: var(--rust-bright);
+  letter-spacing: .04em;
+}
+.lb-comment-meta span {
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  color: var(--bone-dim);
+  opacity: .6;
+}
+.lb-comment p {
+  font-size: .88rem;
+  color: var(--bone);
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* Comment Form */
+.lb-comment-form {
+  padding: .8rem 1rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.lb-comment-name {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: .4rem .6rem;
+  color: var(--bone);
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  outline: none;
+  transition: border-color .2s var(--ease);
+}
+.lb-comment-name:focus { border-color: var(--rust-bright); }
+.lb-comment-name::placeholder { color: var(--bone-dim); opacity: .5; }
+
+.lb-comment-row {
+  display: flex; gap: .4rem;
+}
+.lb-comment-input {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: .5rem .7rem;
+  color: var(--bone);
+  font-size: .85rem;
+  outline: none;
+  transition: border-color .2s var(--ease);
+}
+.lb-comment-input:focus { border-color: var(--rust-bright); }
+.lb-comment-input::placeholder { color: var(--bone-dim); opacity: .5; }
+
+.lb-comment-send {
+  background: var(--blood);
+  border: 1px solid var(--blood-bright);
+  color: var(--bone);
+  border-radius: 4px;
+  width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background .2s var(--ease);
+}
+.lb-comment-send:hover { background: var(--blood-bright); }
+.lb-comment-send svg { width: 16px; height: 16px; }
+
+/* Lightbox navigation */
 .lightbox-close{
   position:absolute; top:1.5rem; right:1.5rem;
   background:none; border:none; color: var(--bone);
@@ -864,10 +1031,6 @@ a:hover{ color: var(--rust-bright); }
 .lightbox-next{ right: 1rem; }
 .lightbox-prev:hover, .lightbox-next:hover{ background: var(--blood); border-color: var(--blood); }
 .lightbox-prev svg, .lightbox-next svg{ width:24px; height:24px; }
-.lightbox-counter{
-  position:absolute; bottom:1.5rem; left:50%; transform: translateX(-50%);
-  font-family: var(--font-mono); font-size:.78rem; letter-spacing:.1em;
-  color: var(--bone-dim);
 }
 
 /* ---- Floating Actions (WhatsApp & Back to top) ---- */
@@ -983,6 +1146,23 @@ a:hover{ color: var(--rust-bright); }
   .lightbox-prev{ left: .5rem; }
   .lightbox-next{ right: .5rem; }
   .lightbox-prev, .lightbox-next{ width:40px; height:40px; }
+  
+  .lightbox-content {
+    flex-direction: column;
+    max-height: 90vh;
+  }
+  .lightbox-img-wrap {
+    flex: 0 1 auto; /* Allow image to shrink if needed */
+  }
+  .lightbox-social {
+    width: 100%;
+    flex: 1 1 200px; /* Take up remaining space, but have a minimum height */
+    border-left: 1px solid var(--line);
+    border-top: none;
+  }
+  .lightbox-img {
+    max-height: 50vh; /* Limit image height on mobile to leave room for comments */
+  }
 
   /* Floating Actions */
   .floating-actions{ bottom: 1.2rem; right: 1.2rem; }
