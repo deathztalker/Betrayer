@@ -1019,7 +1019,7 @@ a:hover{ color: var(--rust-bright); }
   z-index:10;
 }
 .lightbox-close:hover{ color: var(--rust-bright); transform: rotate(90deg); }
-.lightbox-prev, .lightbox-next{
+.lb-prev, .lb-next{
   position:absolute; top:50%; transform: translateY(-50%);
   background: var(--ink); 
   border: 1px solid var(--line);
@@ -1030,17 +1030,17 @@ a:hover{ color: var(--rust-bright); }
   z-index:10;
   box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
-.lightbox-prev{ left: 1.5rem; }
-.lightbox-next{ right: 1.5rem; }
-.lightbox-prev:hover, .lightbox-next:hover{ 
+.lb-prev{ left: 1.5rem; }
+.lb-next{ right: 1.5rem; }
+.lb-prev:hover, .lb-next:hover{ 
   background: var(--blood); 
   border-color: var(--blood-bright); 
   color: #fff;
   box-shadow: 0 0 20px rgba(139, 0, 0, 0.6);
 }
-.lightbox-prev:hover { transform: translateY(-50%) translateX(-4px); }
-.lightbox-next:hover { transform: translateY(-50%) translateX(4px); }
-.lightbox-prev svg, .lightbox-next svg{ 
+.lb-prev:hover { transform: translateY(-50%) translateX(-4px); }
+.lb-next:hover { transform: translateY(-50%) translateX(4px); }
+.lb-prev svg, .lb-next svg{ 
   width:28px; height:28px; 
   transition: transform .3s var(--ease);
 }
@@ -1155,9 +1155,9 @@ a:hover{ color: var(--rust-bright); }
   .footer-inner{ flex-direction: column; text-align: center; gap: .8rem; }
 
   /* Lightbox */
-  .lightbox-prev{ left: .5rem; }
-  .lightbox-next{ right: .5rem; }
-  .lightbox-prev, .lightbox-next{ width:40px; height:40px; }
+  .lb-prev{ left: .5rem; }
+  .lb-next{ right: .5rem; }
+  .lb-prev, .lb-next{ width:40px; height:40px; }
   
   .lightbox-content {
     flex-direction: column;
