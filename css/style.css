@@ -1524,6 +1524,28 @@ a:hover{ color: var(--rust-bright); }
    VISUAL OVERHAUL: SCROLLBAR, CURSOR, PRELOADER
    ========================================================================= */
 
+/* Ultra-Premium 3D Tilt Effect */
+.tilt-card {
+  transition: transform 0.1s ease, box-shadow 0.1s ease !important;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.tilt-card img {
+  transform: translateZ(20px);
+  transition: transform 0.3s ease;
+}
+.tilt-card:hover {
+  z-index: 10;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+/* Anti-Robo / Anti-Arrastre para imágenes */
+.gallery-tile img, .member-card img, .merch-card img, .lb-img {
+  -webkit-user-drag: none;
+  user-select: none;
+  pointer-events: none;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;

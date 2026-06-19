@@ -979,7 +979,31 @@
     try { fn(); } catch (err) { console.error("Betrayer site script error:", err); }
   }
 
+  /* =======================================================================
+     Ultra-Premium 3D Tilt Effect
+     ======================================================================= */
+  function setupTiltEffect() {
+    var tiltCards = document.querySelectorAll(".merch-card, .member-card");
+    if (!tiltCards.length || !window.matchMedia("(pointer: fine)").matches) return;
+
+    toArray(tiltCards).forEach(function(card) {
+      card.classList.add("tilt-card");
+      card.addEventListener("mousemove", function(e) {
+        var rect = card.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+        var rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -10;
+        var rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 10;
+        card.style.transform = "perspective(1000px) rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) scale3d(1.02, 1.02, 1.02)";
+      });
+      card.addEventListener("mouseleave", function() {
+        card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+      });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
+    safe(setupTiltEffect);
     safe(renderShows);
     safe(renderGallery);
     safe(renderSpotify);
