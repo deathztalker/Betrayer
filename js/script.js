@@ -813,6 +813,31 @@
   }
 
   /* =======================================================================
+     Merch Carousels
+     ======================================================================= */
+  function setupCarousels() {
+    var containers = document.querySelectorAll('.merch-carousel-container');
+    for (var i = 0; i < containers.length; i++) {
+      (function(container) {
+        var carousel = container.querySelector('.merch-carousel');
+        var dots = container.querySelectorAll('.dot');
+        if (!carousel || dots.length === 0) return;
+        
+        carousel.addEventListener('scroll', function() {
+          var scrollLeft = carousel.scrollLeft;
+          var width = carousel.clientWidth;
+          var index = Math.round(scrollLeft / width);
+          
+          for (var j = 0; j < dots.length; j++) {
+            if (j === index) dots[j].classList.add('active');
+            else dots[j].classList.remove('active');
+          }
+        }, { passive: true });
+      })(containers[i]);
+    }
+  }
+
+  /* =======================================================================
      Init
      ======================================================================= */
   // Mark JS as available as early as possible so the CSS-based reveal
@@ -837,5 +862,6 @@
     safe(setupGlitch);
     safe(autoMatchMemberPhotos);
     safe(renderVideos);
+    safe(setupCarousels);
   });
 })();
