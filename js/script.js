@@ -26,7 +26,7 @@
   // GALERÍA: las fotos se descubren AUTOMÁTICAMENTE desde GitHub.
   // Solo sube tus fotos a assets/gallery/, haz commit y push.
   // Este arreglo sirve como respaldo si la API de GitHub no responde.
-  var FALLBACK_GALLERY = [
+  var GALLERY = [
     "assets/gallery/central-bar-01.webp",
     "assets/gallery/central-bar-03.webp",
     "assets/gallery/central-bar-02.webp"
