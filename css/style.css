@@ -1021,16 +1021,29 @@ a:hover{ color: var(--rust-bright); }
 .lightbox-close:hover{ color: var(--rust-bright); transform: rotate(90deg); }
 .lightbox-prev, .lightbox-next{
   position:absolute; top:50%; transform: translateY(-50%);
-  background: rgba(10,9,8,.6); border: 1px solid var(--line);
+  background: var(--ink); 
+  border: 1px solid var(--line);
+  border-radius: 50%;
   color: var(--bone); cursor:pointer;
-  width:48px; height:48px; display:flex; align-items:center; justify-content:center;
-  transition: background .2s var(--ease), border-color .2s var(--ease);
+  width:54px; height:54px; display:flex; align-items:center; justify-content:center;
+  transition: all .3s var(--ease);
   z-index:10;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
-.lightbox-prev{ left: 1rem; }
-.lightbox-next{ right: 1rem; }
-.lightbox-prev:hover, .lightbox-next:hover{ background: var(--blood); border-color: var(--blood); }
-.lightbox-prev svg, .lightbox-next svg{ width:24px; height:24px; }
+.lightbox-prev{ left: 1.5rem; }
+.lightbox-next{ right: 1.5rem; }
+.lightbox-prev:hover, .lightbox-next:hover{ 
+  background: var(--blood); 
+  border-color: var(--blood-bright); 
+  color: #fff;
+  box-shadow: 0 0 20px rgba(139, 0, 0, 0.6);
+}
+.lightbox-prev:hover { transform: translateY(-50%) translateX(-4px); }
+.lightbox-next:hover { transform: translateY(-50%) translateX(4px); }
+.lightbox-prev svg, .lightbox-next svg{ 
+  width:28px; height:28px; 
+  transition: transform .3s var(--ease);
+}
 
 /* ---- Floating Actions (WhatsApp & Back to top) ---- */
 .floating-actions {
