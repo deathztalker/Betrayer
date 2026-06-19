@@ -1277,6 +1277,7 @@ a:hover{ color: var(--rust-bright); }
   .shows-board { gap: 2rem; }
   .flyer { padding: 1.5rem; }
   .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+  .merch-grid { grid-template-columns: 1fr; gap: 1.8rem; }
   .contact-grid { gap: 1.5rem; }
   .social-row { padding: 1rem; gap: 0.8rem; }
   .social-row svg { width: 24px; height: 24px; }
