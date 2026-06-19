@@ -26,10 +26,10 @@
   // GALERÍA: las fotos se descubren AUTOMÁTICAMENTE desde GitHub.
   // Solo sube tus fotos a assets/gallery/, haz commit y push.
   // Este arreglo sirve como respaldo si la API de GitHub no responde.
-  var GALLERY = [
-    "assets/gallery/central-bar-01.jpg",
-    "assets/gallery/central-bar-03.jpg",
-    "assets/gallery/central-bar-02.jpg"
+  var FALLBACK_GALLERY = [
+    "assets/gallery/central-bar-01.webp",
+    "assets/gallery/central-bar-03.webp",
+    "assets/gallery/central-bar-02.webp"
   ];
   var GALLERY_MIN_TILES = 8; // cantidad mínima de casilleros a mostrar
 
