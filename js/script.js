@@ -90,7 +90,7 @@
   // Consulta la API de GitHub para listar archivos de una carpeta.
   // Usa sessionStorage como caché para no gastar el rate limit (60/hora).
   function fetchGitHubDir(path, callback) {
-    var cacheKey = "betrayer_gh_" + path;
+    var cacheKey = "betrayer_gh_v2_" + path;
     try {
       var cached = sessionStorage.getItem(cacheKey);
       if (cached) { callback(JSON.parse(cached)); return; }
