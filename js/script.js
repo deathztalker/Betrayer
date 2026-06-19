@@ -1193,7 +1193,7 @@
           });
         }
       });
-    }, { threshold: 0.5 }); // Trigger when 50% of the section is visible
+    }, { rootMargin: "-40% 0px -60% 0px" }); // Trigger when 50% of the section is visible
 
     sections.forEach(function(sec) {
       spyObserver.observe(sec);
