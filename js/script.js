@@ -441,111 +441,207 @@
   }
 
   /* =======================================================================
-     Ember / spark particle system (hero canvas)
+     Intelligent Ambient Effects Engine (Multi-Section)
      ======================================================================= */
-  function setupParticles() {
-    var hero = document.querySelector(".hero");
-    var canvas = document.querySelector(".hero-particles");
-    if (!hero || !canvas) return;
-
-    // respect reduced motion
+  function setupAmbientEffects() {
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    var ctx = canvas.getContext("2d");
-    var particles = [];
-    var MAX_PARTICLES = 55;
-    var isVisible = true;
-    var animId;
+    var canvases = document.querySelectorAll(".ambient-canvas");
+    if (!canvases.length) return;
 
-    var COLORS = [
-      { r: 163, g: 28,  b: 28  },  // blood bright
-      { r: 181, g: 87,  b: 31  },  // rust
-      { r: 211, g: 114, b: 47  },  // rust bright
-      { r: 230, g: 150, b: 60  },  // warm orange
-      { r: 200, g: 50,  b: 30  },  // hot red
-      { r: 255, g: 180, b: 80  },  // ember yellow
-    ];
+    var activeEffects = new Map();
 
-    function resize() {
-      canvas.width = hero.offsetWidth;
-      canvas.height = hero.offsetHeight;
-    }
-    resize();
-    window.addEventListener("resize", resize);
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        var canvas = entry.target;
+        var state = activeEffects.get(canvas);
+        if (!state) return;
+        if (entry.isIntersecting) {
+          if (!state.animId) {
+            state.lastTime = performance.now();
+            startEffect(state);
+          }
+        } else {
+          if (state.animId) {
+            cancelAnimationFrame(state.animId);
+            state.animId = null;
+          }
+        }
+      });
+    }, { threshold: 0 });
 
-    function createParticle() {
-      var color = COLORS[Math.floor(Math.random() * COLORS.length)];
-      return {
-        x: Math.random() * canvas.width,
-        y: canvas.height + Math.random() * 40,
-        size: Math.random() * 2.8 + 0.8,
-        speedY: -(Math.random() * 1.2 + 0.4),
-        speedX: (Math.random() - 0.5) * 0.6,
-        wobbleAmp: Math.random() * 0.5 + 0.2,
-        wobbleSpeed: Math.random() * 0.03 + 0.01,
-        wobbleOffset: Math.random() * Math.PI * 2,
-        opacity: Math.random() * 0.6 + 0.4,
-        life: 0,
-        maxLife: Math.random() * 220 + 100,
-        color: color,
-        tick: 0
+    canvases.forEach(function(canvas) {
+      var section = canvas.parentElement;
+      var effectType = canvas.getAttribute("data-effect");
+      var state = {
+        canvas: canvas,
+        ctx: canvas.getContext("2d", { alpha: true }),
+        effectType: effectType,
+        particles: [],
+        animId: null,
+        time: 0
       };
+      
+      function resize() {
+        var rect = section.getBoundingClientRect();
+        canvas.width = rect.width || window.innerWidth;
+        canvas.height = rect.height || window.innerHeight;
+        initParticles(state);
+      }
+      
+      resize();
+      window.addEventListener("resize", resize);
+      activeEffects.set(canvas, state);
+      observer.observe(canvas);
+    });
+
+    function initParticles(state) {
+      state.particles = [];
+      var w = state.canvas.width;
+      var h = state.canvas.height;
+      var i;
+      
+      if (state.effectType === "embers") {
+        var COLORS = [
+          { r: 163, g: 28,  b: 28  },
+          { r: 181, g: 87,  b: 31  },
+          { r: 211, g: 114, b: 47  },
+          { r: 230, g: 150, b: 60  }
+        ];
+        for(i=0; i<50; i++){
+          var c = COLORS[Math.floor(Math.random() * COLORS.length)];
+          state.particles.push({
+            x: Math.random() * w, y: Math.random() * h,
+            r: Math.random() * 2 + 0.5,
+            vx: (Math.random() - 0.5) * 0.6, vy: -(Math.random() * 1.5 + 0.5),
+            life: Math.random() * 100, maxLife: Math.random() * 150 + 50,
+            wobbleSpeed: Math.random() * 0.03 + 0.01, wobbleAmp: Math.random() * 0.5 + 0.2,
+            color: "rgba(" + c.r + "," + c.g + "," + c.b + ","
+          });
+        }
+      } else if (state.effectType === "smoke") {
+        for(i=0; i<12; i++){
+          state.particles.push({
+            x: Math.random() * w, y: h - (Math.random() * h * 0.4),
+            r: Math.random() * 300 + 150,
+            vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.1,
+            life: Math.random() * Math.PI * 2
+          });
+        }
+      } else if (state.effectType === "dust") {
+        for(i=0; i<35; i++){
+          state.particles.push({
+            x: Math.random() * w, y: Math.random() * h,
+            r: Math.random() * 1.5 + 0.2,
+            vx: (Math.random() - 0.5) * 0.2, vy: (Math.random() - 0.5) * 0.2,
+            life: Math.random() * Math.PI * 2
+          });
+        }
+      }
     }
 
-    // seed particles
-    for (var i = 0; i < MAX_PARTICLES; i++) {
-      var p = createParticle();
-      p.y = Math.random() * canvas.height;
-      p.life = Math.random() * p.maxLife;
-      particles.push(p);
-    }
+    function startEffect(state) {
+      var ctx = state.ctx;
+      var w = state.canvas.width;
+      var h = state.canvas.height;
+      var particles = state.particles;
+      var type = state.effectType;
 
-    function animate() {
-      if (!isVisible) { animId = requestAnimationFrame(animate); return; }
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      function draw(now) {
+        var dt = (now - state.lastTime) / 16; // approx multiplier for 60fps
+        state.lastTime = now;
+        if (dt > 3) dt = 3; // cap delta to prevent huge jumps
 
-      for (var i = particles.length - 1; i >= 0; i--) {
-        var p = particles[i];
-        p.tick++;
-        p.life++;
-        p.y += p.speedY;
-        p.x += p.speedX + Math.sin(p.tick * p.wobbleSpeed + p.wobbleOffset) * p.wobbleAmp;
+        ctx.clearRect(0, 0, w, h);
+        state.time += 0.02 * dt;
 
-        // fade in at start, fade out at end
-        var lifeRatio = p.life / p.maxLife;
-        var alpha = p.opacity;
-        if (lifeRatio < 0.1) alpha *= lifeRatio / 0.1;
-        if (lifeRatio > 0.7) alpha *= (1 - lifeRatio) / 0.3;
+        if (type === "embers") {
+          for(var i=0; i<particles.length; i++){
+            var p = particles[i];
+            p.x += (p.vx + Math.sin(state.time * p.wobbleSpeed) * p.wobbleAmp) * dt;
+            p.y += p.vy * dt;
+            p.life += dt;
+            var alpha = Math.max(0, Math.sin((p.life / p.maxLife) * Math.PI)) * 0.8;
+            
+            if (p.life >= p.maxLife || p.y < -10 || p.x < -10 || p.x > w + 10) {
+              p.y = h + 10; p.x = Math.random() * w; p.life = 0;
+            }
+            
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+            ctx.fillStyle = p.color + alpha + ")";
+            ctx.shadowBlur = p.r * 4;
+            ctx.shadowColor = p.color + "0.5)";
+            ctx.fill();
+          }
+          ctx.shadowBlur = 0;
 
-        if (p.life >= p.maxLife || p.y < -10 || p.x < -10 || p.x > canvas.width + 10) {
-          particles[i] = createParticle();
-          continue;
+        } else if (type === "smoke") {
+          for(var i=0; i<particles.length; i++){
+            var p = particles[i];
+            p.x += p.vx * dt; p.y += p.vy * dt;
+            p.life += 0.005 * dt;
+            if (p.x < -p.r) p.x = w + p.r;
+            if (p.x > w + p.r) p.x = -p.r;
+            
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+            var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+            grad.addColorStop(0, 'rgba(20, 20, 20, 0.12)');
+            grad.addColorStop(1, 'rgba(20, 20, 20, 0)');
+            ctx.fillStyle = grad;
+            ctx.fill();
+          }
+
+        } else if (type === "dust") {
+          for(var i=0; i<particles.length; i++){
+            var p = particles[i];
+            p.x += (p.vx + Math.sin(p.life) * 0.1) * dt; 
+            p.y += p.vy * dt;
+            p.life += 0.01 * dt;
+            if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+            if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+            
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+            ctx.fillStyle = "#ffffff";
+            ctx.globalAlpha = (Math.sin(p.life) + 1) * 0.15;
+            ctx.fill();
+          }
+          ctx.globalAlpha = 1;
+
+        } else if (type === "static") {
+          ctx.fillStyle = "rgba(0,0,0,0.06)";
+          if (Math.random() > 0.5) {
+            for(var i=0; i<8; i++){
+              var y = Math.random() * h;
+              var th = Math.random() * 3 + 1;
+              ctx.fillRect(0, y, w, th);
+            }
+          }
+
+        } else if (type === "noise") {
+          // Extremely cheap noise approximation using tiny rects
+          ctx.fillStyle = "rgba(255,255,255,0.015)";
+          for(var i=0; i<80; i++) {
+             ctx.fillRect(Math.random()*w, Math.random()*h, Math.random()*3+1, Math.random()*3+1);
+          }
+          ctx.fillStyle = "rgba(0,0,0,0.02)";
+          for(var i=0; i<80; i++) {
+             ctx.fillRect(Math.random()*w, Math.random()*h, Math.random()*3+1, Math.random()*3+1);
+          }
+
+        } else if (type === "pulse") {
+          var radius = Math.max(w, h) * 0.8;
+          var pulse = (Math.sin(state.time * 0.5) + 1) * 0.5; // 0 to 1
+          var grad = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, radius + (pulse * 80));
+          grad.addColorStop(0, 'rgba(163, 28, 28, ' + (0.04 + pulse * 0.03) + ')');
+          grad.addColorStop(1, 'transparent');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
         }
 
-        // draw ember with glow
-        ctx.save();
-        ctx.globalAlpha = alpha;
-        ctx.shadowBlur = p.size * 6;
-        ctx.shadowColor = "rgba(" + p.color.r + "," + p.color.g + "," + p.color.b + ",0.6)";
-        ctx.fillStyle = "rgba(" + p.color.r + "," + p.color.g + "," + p.color.b + "," + alpha + ")";
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
+        state.animId = requestAnimationFrame(draw);
       }
-
-      animId = requestAnimationFrame(animate);
+      state.animId = requestAnimationFrame(draw);
     }
-
-    // only animate when hero is in viewport
-    if ("IntersectionObserver" in window) {
-      var obs = new IntersectionObserver(function (entries) {
-        isVisible = entries[0].isIntersecting;
-      }, { threshold: 0 });
-      obs.observe(hero);
-    }
-
-    animate();
   }
 
   /* =======================================================================
@@ -1034,7 +1130,7 @@
     safe(setupI18n);
     safe(setupReveal);
     safe(setupYear);
-    safe(setupParticles);
+    safe(setupAmbientEffects);
     safe(setupLightbox);
     safe(setupGlitch);
     safe(autoMatchMemberPhotos);

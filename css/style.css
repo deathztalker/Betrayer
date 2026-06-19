@@ -383,10 +383,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   opacity:.5;
 }
 
-/* Ember particle canvas */
-.hero-particles{
+/* Ambient canvas for all sections */
+.ambient-canvas {
   position:absolute; top:0; left:0; width:100%; height:100%;
-  z-index:1; pointer-events:none;
+  z-index: 0; pointer-events:none;
 }
 .hero-inner{ position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; padding: 0 1.5rem; }
 .hero-logo{
@@ -1383,7 +1383,7 @@ a:hover{ color: var(--rust-bright); }
 
 /* ---- Reduced motion: disable particles, glitch, glow ----------------------------*/
 @media (prefers-reduced-motion: reduce){
-  .hero-particles{ display: none; }
+  .ambient-canvas{ display: none; }
   .section-title::before, .section-title::after{ display: none; }
   .hero-logo{ animation: heroLogoIn 0s forwards; }
   .wsp-float{ animation: none; }
