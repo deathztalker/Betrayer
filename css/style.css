@@ -318,7 +318,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .nav-toggle::before {
   content: "";
   position: absolute;
-  inset: -12px;
+  inset: -16px; /* An ms grande para "Modo Paranoia" responsivo */
 }
 .nav-toggle span{
   position:absolute; left:0; right:0; height:2px; background: currentColor;

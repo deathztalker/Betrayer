@@ -1120,7 +1120,36 @@
     });
   }
 
+  /* =======================================================================
+     Paranoia Mode: Security Hardening
+     ======================================================================= */
+  function setupSecurity() {
+    // Disable right click (context menu) globally
+    document.addEventListener('contextmenu', function(e) {
+      if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+      }
+    });
+
+    // Disable common DevTools shortcuts (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
+    document.addEventListener('keydown', function(e) {
+      // F12
+      if (e.key === 'F12') {
+        e.preventDefault();
+      }
+      // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
+      if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C' || e.key === 'i' || e.key === 'j' || e.key === 'c')) {
+        e.preventDefault();
+      }
+      // Ctrl+U (View Source)
+      if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) {
+        e.preventDefault();
+      }
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
+    safe(setupSecurity);
     safe(setupEasterEgg);
     safe(setupTiltEffect);
     safe(renderShows);
