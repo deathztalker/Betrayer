@@ -1002,7 +1002,30 @@
     });
   }
 
+  /* =======================================================================
+     Easter Egg: "THRASH"
+     ======================================================================= */
+  function setupEasterEgg() {
+    var secretCode = "thrash";
+    var inputBuffer = "";
+    document.addEventListener("keydown", function(e) {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+      inputBuffer += e.key.toLowerCase();
+      if (inputBuffer.length > secretCode.length) {
+        inputBuffer = inputBuffer.substring(1);
+      }
+      if (inputBuffer === secretCode) {
+        document.body.classList.add("thrash-mode");
+        setTimeout(function() {
+          document.body.classList.remove("thrash-mode");
+        }, 3000);
+        inputBuffer = "";
+      }
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
+    safe(setupEasterEgg);
     safe(setupTiltEffect);
     safe(renderShows);
     safe(renderGallery);
@@ -1019,4 +1042,17 @@
     safe(setupCarousels);
     safe(setupVisualOverhaul);
   });
+  // -------------------------------------------------------------------------
+  // PWA Service Worker Registration
+  // -------------------------------------------------------------------------
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('./sw.js').then(function(registration) {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      }, function(err) {
+        console.log('ServiceWorker registration failed: ', err);
+      });
+    });
+  }
+
 })();
