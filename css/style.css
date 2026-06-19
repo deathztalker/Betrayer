@@ -39,7 +39,10 @@
 
 /* ---- Reset --------------------------------------------------------------*/
 *,*::before,*::after{ box-sizing: border-box; }
-html{ scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+}
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior: auto; }
   *,*::before,*::after{ animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
@@ -120,6 +123,7 @@ section {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  scroll-snap-align: start;
 }
 
 /* ---- Focus accessibility ------------------------------------------------*/

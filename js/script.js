@@ -827,6 +827,23 @@
       if (e.key === 'ArrowRight') next();
       if (e.key === 'ArrowLeft') prev();
     });
+
+    // Touch swipe support
+    var touchStartX = 0;
+    var touchEndX = 0;
+    lbImg.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+    
+    lbImg.addEventListener('touchend', function(e) {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, {passive: true});
+
+    function handleSwipe() {
+      if (touchEndX < touchStartX - 50) next(); // Swipe Left
+      if (touchEndX > touchStartX + 50) prev(); // Swipe Right
+    }
   }
 
   /* =======================================================================
@@ -1155,9 +1172,38 @@
     });
   }
 
+  /* =======================================================================
+     Scroll Spy: Highlight active nav link
+     ======================================================================= */
+  function setupScrollSpy() {
+    var sections = document.querySelectorAll("section, header.hero");
+    var navLinks = document.querySelectorAll("[data-nav-link]");
+
+    var spyObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var id = entry.target.getAttribute("id");
+          if (!id) return;
+          
+          navLinks.forEach(function(link) {
+            link.classList.remove("is-active");
+            if (link.getAttribute("href") === "#" + id) {
+              link.classList.add("is-active");
+            }
+          });
+        }
+      });
+    }, { threshold: 0.5 }); // Trigger when 50% of the section is visible
+
+    sections.forEach(function(sec) {
+      spyObserver.observe(sec);
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     safe(setupSecurity);
     safe(setupEasterEgg);
+    safe(setupScrollSpy);
     safe(setupTiltEffect);
     safe(renderShows);
     safe(renderGallery);
