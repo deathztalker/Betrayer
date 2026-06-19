@@ -1504,6 +1504,10 @@ a:hover{ color: var(--rust-bright); }
 /* =========================================================================
    UTILITIES & TYPOGRAPHY
    ========================================================================= */
+::selection {
+  background-color: var(--rust);
+  color: #fff;
+}
 .sr-only {
   position: absolute;
   width: 1px;
