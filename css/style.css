@@ -1031,7 +1031,6 @@ a:hover{ color: var(--rust-bright); }
 .lightbox-next{ right: 1rem; }
 .lightbox-prev:hover, .lightbox-next:hover{ background: var(--blood); border-color: var(--blood); }
 .lightbox-prev svg, .lightbox-next svg{ width:24px; height:24px; }
-}
 
 /* ---- Floating Actions (WhatsApp & Back to top) ---- */
 .floating-actions {
