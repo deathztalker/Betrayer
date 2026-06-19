@@ -519,13 +519,14 @@
             color: "rgba(" + c.r + "," + c.g + "," + c.b + ","
           });
         }
-      } else if (state.effectType === "smoke") {
-        for(i=0; i<12; i++){
+      } else if (state.effectType === "ash") {
+        for(i=0; i<40; i++){
           state.particles.push({
-            x: Math.random() * w, y: h - (Math.random() * h * 0.4),
-            r: Math.random() * 300 + 150,
-            vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.1,
-            life: Math.random() * Math.PI * 2
+            x: Math.random() * w, y: Math.random() * h,
+            r: Math.random() * 2 + 0.5,
+            vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() * 1 + 0.2),
+            life: Math.random() * 100, maxLife: Math.random() * 100 + 50,
+            wobbleSpeed: Math.random() * 0.02, wobbleAmp: Math.random() * 0.3
           });
         }
       } else if (state.effectType === "dust") {
@@ -575,20 +576,22 @@
           }
           ctx.shadowBlur = 0;
 
-        } else if (type === "smoke") {
+        } else if (type === "ash") {
           for(var i=0; i<particles.length; i++){
             var p = particles[i];
-            p.x += p.vx * dt; p.y += p.vy * dt;
-            p.life += 0.005 * dt;
-            if (p.x < -p.r) p.x = w + p.r;
-            if (p.x > w + p.r) p.x = -p.r;
+            p.x += (p.vx + Math.sin(state.time * p.wobbleSpeed) * p.wobbleAmp) * dt; 
+            p.y += p.vy * dt; // floats down
+            p.life += dt;
+            
+            var alpha = Math.max(0, Math.sin((p.life / p.maxLife) * Math.PI)) * 0.4;
+            
+            if (p.life >= p.maxLife || p.y > h + 10 || p.x < -10 || p.x > w + 10) {
+              p.y = -10; p.x = Math.random() * w; p.life = 0;
+            }
             
             ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-            var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-            // Hacer humo ms brillante (gris claro/blanco)
-            grad.addColorStop(0, 'rgba(255, 255, 255, 0.035)');
-            grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-            ctx.fillStyle = grad;
+            // Color ceniza oscuro (gris rojizo muy tenue)
+            ctx.fillStyle = "rgba(100, 80, 80, " + alpha + ")";
             ctx.fill();
           }
 
