@@ -821,18 +821,51 @@
       (function(container) {
         var carousel = container.querySelector('.merch-carousel');
         var dots = container.querySelectorAll('.dot');
+        var prevBtn = container.querySelector('.merch-arrow.prev');
+        var nextBtn = container.querySelector('.merch-arrow.next');
         if (!carousel || dots.length === 0) return;
         
-        carousel.addEventListener('scroll', function() {
+        function updateDots() {
           var scrollLeft = carousel.scrollLeft;
           var width = carousel.clientWidth;
           var index = Math.round(scrollLeft / width);
-          
           for (var j = 0; j < dots.length; j++) {
             if (j === index) dots[j].classList.add('active');
             else dots[j].classList.remove('active');
           }
-        }, { passive: true });
+        }
+        
+        carousel.addEventListener('scroll', updateDots, { passive: true });
+        
+        function scrollToIdx(idx) {
+          carousel.scrollTo({ left: idx * carousel.clientWidth, behavior: 'smooth' });
+        }
+        
+        if (prevBtn) {
+          prevBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var w = carousel.clientWidth;
+            var curr = Math.round(carousel.scrollLeft / w);
+            scrollToIdx(Math.max(0, curr - 1));
+          });
+        }
+        if (nextBtn) {
+          nextBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var w = carousel.clientWidth;
+            var curr = Math.round(carousel.scrollLeft / w);
+            scrollToIdx(Math.min(dots.length - 1, curr + 1));
+          });
+        }
+        
+        for (var k = 0; k < dots.length; k++) {
+          (function(idx) {
+            dots[idx].addEventListener('click', function(e) {
+              e.stopPropagation();
+              scrollToIdx(idx);
+            });
+          })(k);
+        }
       })(containers[i]);
     }
   }
