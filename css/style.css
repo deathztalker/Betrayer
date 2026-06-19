@@ -704,6 +704,16 @@ body.js-ready .reveal.is-visible{ opacity:1; transform: translateY(0); }
 .gallery-tile.is-empty svg{ width: 26%; height:26%; color: var(--line-bright); }
 .gallery-note{ margin-top: 1.6rem; color: var(--bone-dim); font-size:.85rem; }
 
+.gallery-load-more {
+  display: block;
+  margin: 2rem auto 0;
+  font-family: var(--font-mono);
+  font-size: .85rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: .8rem 2rem;
+}
+
 @media (max-width: 560px){ .gallery-grid{ grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); } }
 
 /* ---- Contact -------------------------------------------------------------------*/

@@ -105,7 +105,7 @@
         try {
           var files = JSON.parse(xhr.responseText);
           var items = files
-            .filter(function (f) { return /\.(jpe?g|png|webp|gif|mp4|webm)$/i.test(f.name); })
+            .filter(function (f) { return f.type === 'file' && /\.(jpe?g|png|webp|gif)$/i.test(f.name); })
             .map(function (f) { return f.path; });
           try { sessionStorage.setItem(cacheKey, JSON.stringify(items)); } catch (e) {}
           callback(items);
@@ -186,7 +186,13 @@
 
   /* =======================================================================
      Render: GALERÍA — auto-descubre fotos desde GitHub API
+     Paginated: shows GALLERY_PAGE_SIZE images at a time with "Load more"
+     Uses thumbs/ subdirectory for grid thumbnails
      ======================================================================= */
+  var GALLERY_PAGE_SIZE = 24;
+  var galleryPage = 0;
+  var galleryPhotos = [];
+
   function renderGallery() {
     var grid = document.querySelector("[data-gallery-grid]");
     if (!grid) return;
@@ -194,26 +200,57 @@
     // intentar auto-descubrir desde GitHub, con GALLERY como respaldo
     fetchGitHubDir("assets/gallery", function (discovered) {
       var photos = (discovered && discovered.length) ? discovered : GALLERY;
-      // si descubrimos fotos nuevas, actualizar GALLERY para el lightbox
       if (discovered && discovered.length) GALLERY = discovered;
-      fillGalleryGrid(grid, photos);
+      galleryPhotos = photos;
+      galleryPage = 0;
+      fillGalleryGrid(grid, galleryPhotos);
     });
 
     // mostrar el respaldo inmediatamente mientras carga la API
-    fillGalleryGrid(grid, GALLERY);
+    galleryPhotos = GALLERY;
+    galleryPage = 0;
+    fillGalleryGrid(grid, galleryPhotos);
+  }
+
+  function getThumbPath(fullPath) {
+    // assets/gallery/photo.jpg -> assets/gallery/thumbs/photo.jpg
+    var parts = fullPath.split('/');
+    var filename = parts.pop();
+    return parts.join('/') + '/thumbs/' + filename;
   }
 
   function fillGalleryGrid(grid, photos) {
-    var total = Math.max(photos.length, GALLERY_MIN_TILES);
-    var html = "";
-    for (var i = 0; i < total; i++) {
+    var endIndex = Math.min((galleryPage + 1) * GALLERY_PAGE_SIZE, photos.length);
+    var startIndex = galleryPage === 0 ? 0 : galleryPage * GALLERY_PAGE_SIZE;
+    var html = galleryPage === 0 ? '' : grid.innerHTML;
+    
+    // Remove existing load-more button if re-rendering
+    var existingBtn = grid.parentNode.querySelector('.gallery-load-more');
+    if (existingBtn) existingBtn.remove();
+
+    for (var i = startIndex; i < endIndex; i++) {
       if (photos[i]) {
-        html += '<div class="gallery-tile"><img src="' + photos[i] + '" alt="Betrayer en vivo" loading="lazy"></div>';
-      } else {
-        html += '<div class="gallery-tile is-empty">' + svgIcon("camera") + "</div>";
+        var thumbSrc = getThumbPath(photos[i]);
+        html += '<div class="gallery-tile" data-full-src="' + photos[i] + '">';
+        html += '<img src="' + thumbSrc + '" alt="Betrayer en vivo" loading="lazy" onerror="this.src=\'' + photos[i] + '\'"/>';
+        html += '</div>';
       }
     }
+    
     grid.innerHTML = html;
+    
+    // Add "Load more" button if there are more photos
+    if (endIndex < photos.length) {
+      var remaining = photos.length - endIndex;
+      var btn = document.createElement('button');
+      btn.className = 'btn btn-ghost gallery-load-more';
+      btn.textContent = 'Cargar más (' + remaining + ' restantes)';
+      btn.addEventListener('click', function() {
+        galleryPage++;
+        fillGalleryGrid(grid, galleryPhotos);
+      });
+      grid.parentNode.appendChild(btn);
+    }
   }
 
   /* =======================================================================
@@ -558,11 +595,16 @@
     var grid = document.querySelector("[data-gallery-grid]");
     if (grid) {
       grid.addEventListener("click", function (e) {
-        var tile = e.target.closest(".gallery-tile:not(.is-empty)");
+        var tile = e.target.closest(".gallery-tile");
         if (!tile) return;
-        var img = tile.querySelector("img");
-        if (!img) return;
-        var idx = realPhotos.indexOf(img.getAttribute("src"));
+        // Use data-full-src attribute for full-res image in lightbox
+        var fullSrc = tile.getAttribute("data-full-src");
+        if (!fullSrc) {
+          var img = tile.querySelector("img");
+          if (img) fullSrc = img.getAttribute("src");
+        }
+        if (!fullSrc) return;
+        var idx = realPhotos.indexOf(fullSrc);
         if (idx >= 0) open(idx);
       });
     }
