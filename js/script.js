@@ -871,6 +871,66 @@
   }
 
   /* =======================================================================
+     Member Modal (Bio / Highlight)
+     ======================================================================= */
+  window.openMemberModal = function(card) {
+    var modal = document.getElementById("member-modal");
+    if (!modal) return;
+    
+    // Extraer data de la tarjeta
+    var nameEl = card.querySelector(".name");
+    var roleEl = card.querySelector(".role");
+    var photoEl = card.querySelector(".member-photo img");
+    var photoSvg = card.querySelector(".member-photo svg"); // fallback
+    var bio = card.getAttribute("data-bio") || "Biografía no disponible.";
+    
+    // Elementos del modal
+    var modalPhoto = document.getElementById("mm-photo");
+    var modalName = document.getElementById("mm-name");
+    var modalRole = document.getElementById("mm-role");
+    var modalBio = document.getElementById("mm-bio");
+    
+    // Inyectar data
+    if (nameEl) modalName.textContent = nameEl.textContent;
+    if (roleEl) modalRole.textContent = roleEl.textContent;
+    
+    // Limpiar contenido bio y crear p
+    modalBio.innerHTML = "";
+    var p = document.createElement("p");
+    p.textContent = bio;
+    modalBio.appendChild(p);
+    
+    // Configurar foto
+    if (photoEl) {
+      modalPhoto.src = photoEl.src;
+      modalPhoto.style.display = "block";
+    } else {
+      modalPhoto.style.display = "none";
+    }
+    
+    // Mostrar modal
+    modal.classList.add("active");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden"; // Prevent scrolling
+  };
+
+  window.closeMemberModal = function() {
+    var modal = document.getElementById("member-modal");
+    if (!modal) return;
+    
+    modal.classList.remove("active");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = ""; // Restore scrolling
+  };
+
+  // Close modal on Escape key
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+      window.closeMemberModal();
+    }
+  });
+
+  /* =======================================================================
      Init
      ======================================================================= */
   // Mark JS as available as early as possible so the CSS-based reveal
