@@ -243,7 +243,7 @@
       if (photos[i]) {
         var thumbSrc = getThumbPath(photos[i]);
         html += '<div class="gallery-tile" data-full-src="' + photos[i] + '">';
-        html += '<img src="' + thumbSrc + '" alt="Betrayer en vivo" loading="lazy" onerror="this.src=\'' + photos[i] + '\'"/>';
+        html += '<img src="' + thumbSrc + '" alt="Betrayer en vivo" loading="lazy" width="400" height="400" onerror="this.src=\'' + photos[i] + '\'"/>';
         html += '</div>';
       }
     }
@@ -687,6 +687,7 @@
     var lbNext = document.querySelector("[data-lightbox-next]");
     var lbCounter = document.querySelector("[data-lightbox-counter]");
     var lbLikeBtn = document.getElementById("lb-like-btn");
+    var lbShareBtn = document.getElementById("lb-share-btn");
     var lbLikeCount = document.getElementById("lb-like-count");
     var lbCommentsList = document.getElementById("lb-comments-list");
     var lbCommentForm = document.getElementById("lb-comment-form");
@@ -800,6 +801,32 @@
           lbLikeBtn.classList.add('lb-like-pop');
           setTimeout(function () { lbLikeBtn.classList.remove('lb-like-pop'); }, 400);
           window.fireToggleLike(getCurrentPath());
+        }
+      });
+    }
+
+    // Share button
+    if (lbShareBtn) {
+      lbShareBtn.addEventListener('click', function () {
+        var path = getCurrentPath();
+        if (!path) return;
+        var fullUrl = window.location.origin + window.location.pathname + '?photo=' + encodeURIComponent(path);
+        
+        if (navigator.share) {
+          navigator.share({
+            title: 'Betrayer en vivo',
+            text: 'Mira esta foto de Betrayer 🤘',
+            url: fullUrl
+          }).catch(function(err) {
+            console.log('Error compartiendo:', err);
+          });
+        } else {
+          // Fallback: copy to clipboard
+          navigator.clipboard.writeText(fullUrl).then(function() {
+            var oldTitle = lbShareBtn.getAttribute('title');
+            lbShareBtn.setAttribute('title', '¡Enlace copiado!');
+            setTimeout(function() { lbShareBtn.setAttribute('title', oldTitle); }, 2000);
+          });
         }
       });
     }

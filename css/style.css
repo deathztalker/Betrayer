@@ -1077,7 +1077,12 @@ a:hover{ color: var(--rust-bright); }
   border-bottom: 1px solid var(--line);
 }
 
-.lb-like-btn {
+.lb-social-actions {
+  display: flex;
+  gap: .5rem;
+}
+
+.lb-like-btn, .lb-share-btn {
   display: flex; align-items: center; gap: .5rem;
   background: none; border: 1px solid var(--line);
   color: var(--bone-dim);
@@ -1088,6 +1093,9 @@ a:hover{ color: var(--rust-bright); }
   cursor: pointer;
   transition: all .2s var(--ease);
 }
+.lb-share-btn { padding: .4rem; }
+.lb-share-btn svg { width: 18px; height: 18px; }
+.lb-share-btn:hover { border-color: var(--rust-bright); color: var(--bone); }
 .lb-like-btn:hover { border-color: var(--blood-bright); color: var(--bone); }
 .lb-like-btn.is-liked { border-color: var(--blood-bright); color: #ff4757; }
 .lb-like-btn.is-liked .lb-heart { fill: #ff4757; stroke: #ff4757; }

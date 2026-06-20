@@ -33,18 +33,82 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "MusicGroup",
-  "name": "Betrayer",
-  "genre": "Thrash Metal",
-  "foundingLocation": {
-    "@type": "Place",
-    "name": "Talca, Región del Maule, Chile"
-  },
-  "sameAs": [
-    "https://www.facebook.com/betrayerbanda",
-    "https://www.instagram.com/betrayer_chile",
-    "https://betrayerbanda.bandcamp.com",
-    "https://www.youtube.com/channel/UCby3sI-P50SgWkFLOkdqMbQ"
+  "@graph": [
+    {
+      "@type": "MusicGroup",
+      "@id": "https://betrayer.cl/#banda",
+      "name": "Betrayer",
+      "genre": ["Thrash Metal", "Metal"],
+      "foundingLocation": {
+        "@type": "Place",
+        "name": "Talca, Región del Maule, Chile"
+      },
+      "image": "https://betrayer.cl/assets/og-image.jpg",
+      "url": "https://betrayer.cl/",
+      "sameAs": [
+        "https://www.facebook.com/betrayerbanda",
+        "https://www.instagram.com/betrayer_chile",
+        "https://betrayerbanda.bandcamp.com",
+        "https://www.youtube.com/channel/UCby3sI-P50SgWkFLOkdqMbQ"
+      ],
+      "album": [
+        {
+          "@type": "MusicAlbum",
+          "name": "Betrayer LP",
+          "datePublished": "2019",
+          "byArtist": {"@id": "https://betrayer.cl/#banda"}
+        },
+        {
+          "@type": "MusicAlbum",
+          "name": "1313",
+          "datePublished": "2013",
+          "albumReleaseType": "EP",
+          "byArtist": {"@id": "https://betrayer.cl/#banda"}
+        }
+      ]
+    },
+    {
+      "@type": "Product",
+      "name": "Polera Infernal",
+      "image": "https://betrayer.cl/assets/merch/merch_tshirt_infernal.webp",
+      "description": "Polera oficial Betrayer diseño Infernal",
+      "brand": { "@type": "Brand", "name": "Betrayer" },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://betrayer.cl/#merch",
+        "priceCurrency": "CLP",
+        "price": "15000",
+        "availability": "https://schema.org/InStock"
+      }
+    },
+    {
+      "@type": "Product",
+      "name": "Polera Tour Skulls",
+      "image": "https://betrayer.cl/assets/merch/merch_tshirt_tour_skulls.webp",
+      "description": "Polera oficial Betrayer diseño Tour Skulls",
+      "brand": { "@type": "Brand", "name": "Betrayer" },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://betrayer.cl/#merch",
+        "priceCurrency": "CLP",
+        "price": "15000",
+        "availability": "https://schema.org/InStock"
+      }
+    },
+    {
+      "@type": "Product",
+      "name": "Polera Grim Reaper",
+      "image": "https://betrayer.cl/assets/merch/merch_tshirt_reaper.webp",
+      "description": "Polera oficial Betrayer diseño Grim Reaper",
+      "brand": { "@type": "Brand", "name": "Betrayer" },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://betrayer.cl/#merch",
+        "priceCurrency": "CLP",
+        "price": "15000",
+        "availability": "https://schema.org/InStock"
+      }
+    }
   ]
 }
 </script>
@@ -342,7 +406,7 @@
       <!-- Polera -->
       <div class="merch-card">
         <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt.webp">
-          <img src="assets/merch/thumbs/merch_tshirt.webp" alt="Polera Betrayer" loading="lazy">
+          <img src="assets/merch/thumbs/merch_tshirt.webp" alt="Polera Betrayer" loading="lazy" width="400" height="500">
           <div class="gallery-overlay">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
           </div>
@@ -356,7 +420,7 @@
       <!-- Polera 2 -->
       <div class="merch-card">
         <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt_2.webp">
-          <img src="assets/merch/thumbs/merch_tshirt_2.webp" alt="Polera Betrayer Skulls" loading="lazy">
+          <img src="assets/merch/thumbs/merch_tshirt_2.webp" alt="Polera Betrayer Skulls" loading="lazy" width="400" height="500">
           <div class="gallery-overlay">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
           </div>
@@ -371,7 +435,7 @@
       <!-- Polera 3 -->
       <div class="merch-card">
         <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt_3.webp">
-          <img src="assets/merch/thumbs/merch_tshirt_3.webp" alt="Polera Betrayer Reaper" loading="lazy">
+          <img src="assets/merch/thumbs/merch_tshirt_3.webp" alt="Polera Betrayer Reaper" loading="lazy" width="400" height="500">
           <div class="gallery-overlay">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
           </div>
@@ -387,18 +451,18 @@
       <div class="merch-card">
         <div class="merch-carousel-container">
 
-  <button class="merch-arrow prev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <button class="merch-arrow next" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+  <button class="merch-arrow prev" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <button class="merch-arrow next" aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
 
           <div class="merch-carousel">
             <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt_sobek.webp">
-              <img src="assets/merch/thumbs/merch_tshirt_sobek.webp" alt="Polera Betrayer Sobek V1" loading="lazy">
+              <img src="assets/merch/thumbs/merch_tshirt_sobek.webp" alt="Polera Betrayer Sobek V1" loading="lazy" width="400" height="500">
               <div class="gallery-overlay">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
               </div>
             </div>
             <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt_sobek_v2.webp">
-              <img src="assets/merch/thumbs/merch_tshirt_sobek_v2.webp" alt="Polera Betrayer Sobek V2" loading="lazy">
+              <img src="assets/merch/thumbs/merch_tshirt_sobek_v2.webp" alt="Polera Betrayer Sobek V2" loading="lazy" width="400" height="500">
               <div class="gallery-overlay">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
               </div>
@@ -420,18 +484,18 @@
       <div class="merch-card">
         <div class="merch-carousel-container">
 
-  <button class="merch-arrow prev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <button class="merch-arrow next" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+  <button class="merch-arrow prev" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <button class="merch-arrow next" aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
 
           <div class="merch-carousel">
             <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt_krampus.webp">
-              <img src="assets/merch/thumbs/merch_tshirt_krampus.webp" alt="Polera Betrayer Krampus V1" loading="lazy">
+              <img src="assets/merch/thumbs/merch_tshirt_krampus.webp" alt="Polera Betrayer Krampus V1" loading="lazy" width="400" height="500">
               <div class="gallery-overlay">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
               </div>
             </div>
             <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt_krampus_v2.webp">
-              <img src="assets/merch/thumbs/merch_tshirt_krampus_v2.webp" alt="Polera Betrayer Krampus V2" loading="lazy">
+              <img src="assets/merch/thumbs/merch_tshirt_krampus_v2.webp" alt="Polera Betrayer Krampus V2" loading="lazy" width="400" height="500">
               <div class="gallery-overlay">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
               </div>
@@ -453,8 +517,8 @@
       <div class="merch-card">
         <div class="merch-carousel-container">
 
-  <button class="merch-arrow prev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <button class="merch-arrow next" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+  <button class="merch-arrow prev" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <button class="merch-arrow next" aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
 
           <div class="merch-carousel">
             <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt_pueblo.webp">
@@ -486,18 +550,18 @@
       <div class="merch-card">
         <div class="merch-carousel-container">
 
-  <button class="merch-arrow prev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <button class="merch-arrow next" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+  <button class="merch-arrow prev" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <button class="merch-arrow next" aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
 
           <div class="merch-carousel">
             <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt_iscariote.webp">
-              <img src="assets/merch/thumbs/merch_tshirt_iscariote.webp" alt="Polera Betrayer Iscariote V1" loading="lazy">
+              <img src="assets/merch/thumbs/merch_tshirt_iscariote.webp" alt="Polera Betrayer Iscariote V1" loading="lazy" width="400" height="500">
               <div class="gallery-overlay">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
               </div>
             </div>
             <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt_iscariote_v2.webp">
-              <img src="assets/merch/thumbs/merch_tshirt_iscariote_v2.webp" alt="Polera Betrayer Iscariote V2" loading="lazy">
+              <img src="assets/merch/thumbs/merch_tshirt_iscariote_v2.webp" alt="Polera Betrayer Iscariote V2" loading="lazy" width="400" height="500">
               <div class="gallery-overlay">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
               </div>
@@ -519,18 +583,18 @@
       <div class="merch-card">
         <div class="merch-carousel-container">
 
-  <button class="merch-arrow prev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <button class="merch-arrow next" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+  <button class="merch-arrow prev" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <button class="merch-arrow next" aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
 
           <div class="merch-carousel">
             <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt_asesino.webp">
-              <img src="assets/merch/thumbs/merch_tshirt_asesino.webp" alt="Polera Betrayer Asesino Absuelto V1" loading="lazy">
+              <img src="assets/merch/thumbs/merch_tshirt_asesino.webp" alt="Polera Betrayer Asesino Absuelto V1" loading="lazy" width="400" height="500">
               <div class="gallery-overlay">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
               </div>
             </div>
             <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt_asesino_v2.webp">
-              <img src="assets/merch/thumbs/merch_tshirt_asesino_v2.webp" alt="Polera Betrayer Asesino Absuelto V2" loading="lazy">
+              <img src="assets/merch/thumbs/merch_tshirt_asesino_v2.webp" alt="Polera Betrayer Asesino Absuelto V2" loading="lazy" width="400" height="500">
               <div class="gallery-overlay">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
               </div>
@@ -552,24 +616,24 @@
       <div class="merch-card">
         <div class="merch-carousel-container">
 
-  <button class="merch-arrow prev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <button class="merch-arrow next" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+  <button class="merch-arrow prev" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <button class="merch-arrow next" aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
 
           <div class="merch-carousel">
             <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt_abbadon.webp">
-              <img src="assets/merch/thumbs/merch_tshirt_abbadon.webp" alt="Polera Betrayer Abbadon V1" loading="lazy">
+              <img src="assets/merch/thumbs/merch_tshirt_abbadon.webp" alt="Polera Betrayer Abbadon V1" loading="lazy" width="400" height="500">
               <div class="gallery-overlay">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
               </div>
             </div>
             <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt_abbadon_v2.webp">
-              <img src="assets/merch/thumbs/merch_tshirt_abbadon_v2.webp" alt="Polera Betrayer Abbadon V2" loading="lazy">
+              <img src="assets/merch/thumbs/merch_tshirt_abbadon_v2.webp" alt="Polera Betrayer Abbadon V2" loading="lazy" width="400" height="500">
               <div class="gallery-overlay">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
               </div>
             </div>
             <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt_abbadon_v3.webp">
-              <img src="assets/merch/thumbs/merch_tshirt_abbadon_v3.webp" alt="Polera Betrayer Abbadon V3" loading="lazy">
+              <img src="assets/merch/thumbs/merch_tshirt_abbadon_v3.webp" alt="Polera Betrayer Abbadon V3" loading="lazy" width="400" height="500">
               <div class="gallery-overlay">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
               </div>
@@ -592,18 +656,18 @@
       <div class="merch-card">
         <div class="merch-carousel-container">
 
-  <button class="merch-arrow prev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <button class="merch-arrow next" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+  <button class="merch-arrow prev" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <button class="merch-arrow next" aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
 
           <div class="merch-carousel">
             <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt_dma.webp">
-              <img src="assets/merch/thumbs/merch_tshirt_dma.webp" alt="Polera Betrayer D.M.A. V1" loading="lazy">
+              <img src="assets/merch/thumbs/merch_tshirt_dma.webp" alt="Polera Betrayer D.M.A. V1" loading="lazy" width="400" height="500">
               <div class="gallery-overlay">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
               </div>
             </div>
             <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_tshirt_dma_v2.webp">
-              <img src="assets/merch/thumbs/merch_tshirt_dma_v2.webp" alt="Polera Betrayer D.M.A. V2" loading="lazy">
+              <img src="assets/merch/thumbs/merch_tshirt_dma_v2.webp" alt="Polera Betrayer D.M.A. V2" loading="lazy" width="400" height="500">
               <div class="gallery-overlay">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
               </div>
@@ -638,7 +702,7 @@
       <!-- Calcetas -->
       <div class="merch-card">
         <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_socks.webp">
-          <img src="assets/merch/thumbs/merch_socks.webp" alt="Calcetas Betrayer" loading="lazy">
+          <img src="assets/merch/thumbs/merch_socks.webp" alt="Calcetas Betrayer" loading="lazy" width="400" height="500">
           <div class="gallery-overlay">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
           </div>
@@ -653,7 +717,7 @@
       <!-- Llavero -->
       <div class="merch-card">
         <div class="merch-img-wrap gallery-tile" data-full-src="assets/merch/merch_keychain.webp">
-          <img src="assets/merch/thumbs/merch_keychain.webp" alt="Llavero Betrayer" loading="lazy">
+          <img src="assets/merch/thumbs/merch_keychain.webp" alt="Llavero Betrayer" loading="lazy" width="400" height="500">
           <div class="gallery-overlay">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
           </div>
@@ -736,10 +800,15 @@
     </div>
     <div class="lightbox-social" id="lb-social">
       <div class="lb-social-header">
-        <button class="lb-like-btn" id="lb-like-btn" aria-label="Me gusta">
-          <svg class="lb-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <span class="lb-like-count" id="lb-like-count">0</span>
-        </button>
+        <div class="lb-social-actions">
+          <button class="lb-like-btn" id="lb-like-btn" aria-label="Me gusta">
+            <svg class="lb-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span class="lb-like-count" id="lb-like-count">0</span>
+          </button>
+          <button class="lb-share-btn" id="lb-share-btn" aria-label="Compartir" title="Compartir">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </button>
+        </div>
         <span class="lightbox-counter" data-lightbox-counter></span>
       </div>
       <div class="lb-comments-list" id="lb-comments-list">
