@@ -23,9 +23,10 @@
     }
   ];
 
-  // GALERÍA: las fotos se descubren AUTOMÁTICAMENTE desde GitHub.
-  // Solo sube tus fotos a assets/gallery/, haz commit y push.
-  // Este arreglo sirve como respaldo si la API de GitHub no responde.
+  // GALERÍA: se carga automáticamente desde data/gallery.json.
+  // Para agregar fotos: sube a assets/gallery/, luego corre el script
+  // que regenera gallery.json (o edítalo manualmente).
+  // Este arreglo sirve como respaldo si el JSON no carga.
   var GALLERY = [
     "assets/gallery/central-bar-01.webp",
     "assets/gallery/central-bar-03.webp",
@@ -185,7 +186,7 @@
   }
 
   /* =======================================================================
-     Render: GALERÍA — carga directamente desde el arreglo GALLERY
+     Render: GALERÍA — carga desde data/gallery.json
      Paginated: shows GALLERY_PAGE_SIZE images at a time with "Load more"
      Uses thumbs/ subdirectory for grid thumbnails
      ======================================================================= */
@@ -197,10 +198,29 @@
     var grid = document.querySelector("[data-gallery-grid]");
     if (!grid) return;
 
-    // Cargar directamente desde el arreglo estático GALLERY
+    // Mostrar respaldo inmediatamente (3 fotos)
     galleryPhotos = GALLERY.filter(function(src) { return !!src; });
     galleryPage = 0;
     fillGalleryGrid(grid, galleryPhotos);
+
+    // Luego cargar la lista completa desde gallery.json
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "data/gallery.json");
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        try {
+          var photos = JSON.parse(xhr.responseText);
+          if (photos && photos.length) {
+            GALLERY = photos;
+            galleryPhotos = photos;
+            galleryPage = 0;
+            fillGalleryGrid(grid, galleryPhotos);
+          }
+        } catch (e) { /* JSON inválido, mantener respaldo */ }
+      }
+    };
+    xhr.onerror = function () { /* sin conexión, mantener respaldo */ };
+    xhr.send();
   }
 
   function getThumbPath(fullPath) {
