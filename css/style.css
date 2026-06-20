@@ -1550,9 +1550,12 @@ a:hover{ color: var(--rust-bright); }
     flex-direction: column;
   }
   .member-modal-left {
+    flex: none;
+    width: 100%;
+    height: 350px;
+    max-height: 40vh;
     border-right: none;
     border-bottom: 1px solid var(--line);
-    max-height: 350px;
   }
   .member-modal-right {
     padding: 2rem 1.5rem;
