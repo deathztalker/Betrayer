@@ -185,7 +185,7 @@
   }
 
   /* =======================================================================
-     Render: GALERÍA — auto-descubre fotos desde GitHub API
+     Render: GALERÍA — carga directamente desde el arreglo GALLERY
      Paginated: shows GALLERY_PAGE_SIZE images at a time with "Load more"
      Uses thumbs/ subdirectory for grid thumbnails
      ======================================================================= */
@@ -197,17 +197,8 @@
     var grid = document.querySelector("[data-gallery-grid]");
     if (!grid) return;
 
-    // intentar auto-descubrir desde GitHub, con GALLERY como respaldo
-    fetchGitHubDir("assets/gallery", function (discovered) {
-      var photos = (discovered && discovered.length) ? discovered : GALLERY;
-      if (discovered && discovered.length) GALLERY = discovered;
-      galleryPhotos = photos;
-      galleryPage = 0;
-      fillGalleryGrid(grid, galleryPhotos);
-    });
-
-    // mostrar el respaldo inmediatamente mientras carga la API
-    galleryPhotos = GALLERY;
+    // Cargar directamente desde el arreglo estático GALLERY
+    galleryPhotos = GALLERY.filter(function(src) { return !!src; });
     galleryPage = 0;
     fillGalleryGrid(grid, galleryPhotos);
   }
@@ -282,6 +273,11 @@
 
           // Cargar el primer video en el reproductor principal
           mainVideo.src = "https://www.youtube.com/embed/" + videos[0] + "?autoplay=0";
+
+          // Ocultar el placeholder ahora que los videos cargaron
+          var placeholder = document.querySelector('.video-placeholder');
+          if (placeholder) placeholder.style.display = 'none';
+          mainVideo.style.opacity = '1';
 
           // Manejar clics en el carrusel
           carousel.addEventListener("click", function (e) {
@@ -991,6 +987,47 @@
   }
 
   /* =======================================================================
+     Merch: Talla selector — inyecta <select> antes de botones con "talla"
+     ======================================================================= */
+  function setupMerchTallas() {
+    var buyBtns = document.querySelectorAll('.merch-buy');
+    toArray(buyBtns).forEach(function(btn) {
+      var href = btn.getAttribute('href') || '';
+      if (href.indexOf('talla') === -1) return; // Solo poleras (tienen "talla" en el URL)
+
+      // Si ya tiene un select hermano, no duplicar
+      if (btn.parentNode.querySelector('.merch-talla')) return;
+
+      // Crear el <select>
+      var sel = document.createElement('select');
+      sel.className = 'merch-talla';
+      sel.setAttribute('aria-label', 'Seleccionar talla');
+      sel.innerHTML = '<option value="" disabled selected>Elige tu talla</option>' +
+        '<option value="S">S</option>' +
+        '<option value="M">M</option>' +
+        '<option value="L">L</option>' +
+        '<option value="XL">XL</option>' +
+        '<option value="XXL">XXL</option>';
+      btn.parentNode.insertBefore(sel, btn);
+
+      // Interceptar el clic del botón para inyectar la talla
+      btn.addEventListener('click', function(e) {
+        var talla = sel.value;
+        if (!talla) {
+          e.preventDefault();
+          sel.focus();
+          sel.style.borderColor = 'var(--rust-bright)';
+          setTimeout(function() { sel.style.borderColor = ''; }, 1500);
+          return;
+        }
+        // Reemplazar "talla%20..." por "talla%20XL" (o la que sea)
+        var newHref = href.replace('talla%20...', 'talla%20' + talla);
+        btn.setAttribute('href', newHref);
+      });
+    });
+  }
+
+  /* =======================================================================
      Member Modal (Bio / Highlight)
      ======================================================================= */
   window.openMemberModal = function(card) {
@@ -1218,6 +1255,7 @@
     safe(autoMatchMemberPhotos);
     safe(renderVideos);
     safe(setupCarousels);
+    safe(setupMerchTallas);
     safe(setupVisualOverhaul);
   });
   // -------------------------------------------------------------------------
@@ -1233,7 +1271,6 @@
     });
   }
 
-})();
   /* =======================================================================
      Offline Mode Detection (PWA Toast)
      ======================================================================= */
@@ -1264,9 +1301,11 @@
   }
 
   window.addEventListener('offline', function() {
-    showToast('Conexin Perdida. Modo Offline Activado.', 'offline');
+    showToast('Conexión Perdida. Modo Offline Activado.', 'offline');
   });
 
   window.addEventListener('online', function() {
-    showToast('Conexin Restaurada.', 'online');
+    showToast('Conexión Restaurada.', 'online');
   });
+
+})();

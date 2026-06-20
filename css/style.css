@@ -846,6 +846,26 @@ body.js-ready .reveal.is-visible{ opacity:1; transform: translateY(0); }
   color: var(--paper);
 }
 
+.merch-talla {
+  width: 100%;
+  padding: 0.55rem 0.8rem;
+  margin-bottom: 0.5rem;
+  background: var(--paper);
+  color: var(--paper-ink);
+  border: 1px solid var(--paper-ink);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: border-color 0.3s var(--ease);
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%230a0908' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+}
+
 /* ---- Gallery -----------------------------------------------------------------*/
 .gallery-wrap {
   max-height: 800px; overflow-y: auto; padding-right: 8px;
