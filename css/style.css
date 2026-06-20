@@ -1347,6 +1347,19 @@ a:hover{ color: var(--rust-bright); }
   /* Buttons — touch target */
   .btn{ padding: .95rem 1.3rem; min-height: 44px; }
 
+  /* Fix iOS input zoom on comments */
+  .lb-comment-name,
+  .lb-comment-input {
+    font-size: 16px !important;
+  }
+  
+  /* Fix gallery pagination scroll trap */
+  .gallery-wrap {
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
+  }
+
   /* Nav */
   .nav{ padding: .9rem 1rem; }
   .nav.is-scrolled{ padding: .6rem 1rem; }

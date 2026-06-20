@@ -257,8 +257,17 @@
       btn.className = 'btn btn-ghost gallery-load-more';
       btn.textContent = 'Cargar más (' + remaining + ' restantes)';
       btn.addEventListener('click', function() {
+        var firstNewPhotoIdx = (galleryPage + 1) * GALLERY_PAGE_SIZE;
         galleryPage++;
         fillGalleryGrid(grid, galleryPhotos);
+        
+        // Smooth scroll to the first new photo
+        setTimeout(function() {
+          var tiles = grid.querySelectorAll('.gallery-tile');
+          if (tiles[firstNewPhotoIdx]) {
+            tiles[firstNewPhotoIdx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 50);
       });
       grid.parentNode.appendChild(btn);
     }
