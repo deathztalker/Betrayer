@@ -138,4 +138,51 @@
     });
   };
 
+  // ---- VISIT COUNTER ----------------------------------------------------------
+
+  function formatNumber(n) {
+    if (typeof n !== 'number') return '—';
+    return n.toLocaleString('es-CL');
+  }
+
+  function initVisitCounter() {
+    var el = document.getElementById('visit-count');
+    if (!el) return;
+
+    var counterRef = db.collection('site').doc('stats');
+
+    // Listen for real-time updates so the number is always fresh
+    counterRef.onSnapshot(function (doc) {
+      if (doc.exists) {
+        var data = doc.data();
+        el.textContent = formatNumber(data.visits || 0);
+      } else {
+        el.textContent = '0';
+      }
+    });
+
+    // Only increment once per session (prevents inflating on refreshes)
+    if (!sessionStorage.getItem('betrayer_visited')) {
+      sessionStorage.setItem('betrayer_visited', '1');
+
+      db.runTransaction(function (transaction) {
+        return transaction.get(counterRef).then(function (doc) {
+          if (!doc.exists) {
+            transaction.set(counterRef, { visits: 1 });
+          } else {
+            var newCount = (doc.data().visits || 0) + 1;
+            transaction.update(counterRef, { visits: newCount });
+          }
+        });
+      });
+    }
+  }
+
+  // Run when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVisitCounter);
+  } else {
+    initVisitCounter();
+  }
+
 })();

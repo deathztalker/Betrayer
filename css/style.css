@@ -999,6 +999,32 @@ footer{
 .footer-meta{ font-family: var(--font-mono); font-size:.72rem; color: var(--bone-dim); letter-spacing:.05em; }
 .back-top{ font-family: var(--font-mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color: var(--bone-dim); transition: color .2s var(--ease); }
 .back-top:hover{ color: var(--rust-bright); }
+
+/* Visit counter */
+.footer-visits{
+  text-align: center;
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+.visit-counter{
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  letter-spacing: .08em;
+  color: var(--bone-dim);
+  opacity: .6;
+  transition: opacity .3s ease;
+}
+.visit-counter:hover{ opacity: 1; }
+.visit-counter svg{ flex-shrink: 0; }
+#visit-count{
+  font-weight: 700;
+  color: var(--rust);
+  font-variant-numeric: tabular-nums;
+}
 a{ color: var(--rust); text-decoration:none; transition: color .2s var(--ease); }
 a:hover{ color: var(--rust-bright); }
 
