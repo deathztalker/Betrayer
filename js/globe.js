@@ -116,32 +116,68 @@ function initGlobe() {
   var width = canvas.offsetWidth || 500;
   var height = canvas.offsetHeight || 500;
   
+  canvas.style.cursor = 'grab';
+  
+  var isDragging = false;
+  var startX = 0;
+  var startY = 0;
+  
+  canvas.addEventListener('pointerdown', function(e) {
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    canvas.style.cursor = 'grabbing';
+    focusTarget = null; // Cancelar focus si el usuario decide moverlo
+  });
+  
+  window.addEventListener('pointerup', function() {
+    isDragging = false;
+    if (canvas) canvas.style.cursor = 'grab';
+  });
+  
+  window.addEventListener('pointermove', function(e) {
+    if (isDragging) {
+      var deltaX = e.clientX - startX;
+      var deltaY = e.clientY - startY;
+      
+      currentPhi -= deltaX * 0.008; 
+      currentTheta -= deltaY * 0.008;
+      
+      // Evitar que el globo se voltee por completo
+      currentTheta = Math.max(-Math.PI/2.5, Math.min(Math.PI/2.5, currentTheta));
+      
+      startX = e.clientX;
+      startY = e.clientY;
+    }
+  });
+
   globeInstance = createGlobe(canvas, {
     devicePixelRatio: dpr,
     width: width * dpr,
     height: height * dpr,
     phi: 0,
     theta: 0,
-    dark: 0, // Transparente, los puntos serán del color de baseColor
+    dark: 1, 
     diffuse: 1.2,
     mapSamples: 16000,
     mapBrightness: 6,
-    baseColor: [0.6, 0.6, 0.6], // Puntos grises claros
-    markerColor: [0.8, 0.1, 0.1], // Rojo Betrayer
-    glowColor: [0.2, 0.2, 0.2], // Resplandor leve
+    baseColor: [0.3, 0.3, 0.3], // En dark: 1, los puntos son 1 - baseColor. Así que 1 - 0.3 = 0.7 (gris claro)
+    markerColor: [0.8, 0.1, 0.1], 
+    glowColor: [0.1, 0.1, 0.1], // Resplandor leve
     markers: markers,
     onRender: function(state) {
-      if (focusTarget) {
+      if (isDragging) {
+        // La rotación la controla el mouse en el evento pointermove
+      } else if (focusTarget) {
         // Enfoque a una ciudad específica
         var targetPhi = Math.PI - (focusTarget.lng * Math.PI / 180) - Math.PI / 2;
         var targetTheta = focusTarget.lat * Math.PI / 180;
         
-        // Easing (transición suave) hacia el punto
         currentPhi += (targetPhi - currentPhi) * 0.05;
         currentTheta += (targetTheta - currentTheta) * 0.05;
       } else {
         // Rotación libre por defecto
-        currentPhi += 0.01;
+        currentPhi += 0.005; // un poco más lento para que sea majestuoso
         currentTheta += (0 - currentTheta) * 0.05; 
       }
       
