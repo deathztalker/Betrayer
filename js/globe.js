@@ -113,8 +113,8 @@ function loadGlobeData() {
 
 function initGlobe() {
   var dpr = window.devicePixelRatio || 1;
-  var width = canvas.offsetWidth;
-  var height = canvas.offsetHeight;
+  var width = canvas.offsetWidth || 500;
+  var height = canvas.offsetHeight || 500;
   
   globeInstance = createGlobe(canvas, {
     devicePixelRatio: dpr,
@@ -122,27 +122,26 @@ function initGlobe() {
     height: height * dpr,
     phi: 0,
     theta: 0,
-    dark: 1,
+    dark: 0, // Transparente, los puntos serán del color de baseColor
     diffuse: 1.2,
     mapSamples: 16000,
     mapBrightness: 6,
-    baseColor: [0.3, 0.3, 0.3], 
-    markerColor: [0.8, 0.1, 0.1], 
-    glowColor: [1, 1, 1],
+    baseColor: [0.6, 0.6, 0.6], // Puntos grises claros
+    markerColor: [0.8, 0.1, 0.1], // Rojo Betrayer
+    glowColor: [0.2, 0.2, 0.2], // Resplandor leve
     markers: markers,
     onRender: function(state) {
       if (focusTarget) {
         // Enfoque a una ciudad específica
-        var targetPhi = Math.PI - focusTarget.lng * Math.PI / 180 - Math.PI / 2;
+        var targetPhi = Math.PI - (focusTarget.lng * Math.PI / 180) - Math.PI / 2;
         var targetTheta = focusTarget.lat * Math.PI / 180;
         
         // Easing (transición suave) hacia el punto
         currentPhi += (targetPhi - currentPhi) * 0.05;
         currentTheta += (targetTheta - currentTheta) * 0.05;
       } else {
-        // Rotación libre por defecto (aumentado para que se note)
+        // Rotación libre por defecto
         currentPhi += 0.01;
-        // Si theta estaba en otro ángulo, lo devolvemos suavemente al centro (0)
         currentTheta += (0 - currentTheta) * 0.05; 
       }
       
