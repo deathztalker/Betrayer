@@ -126,9 +126,9 @@ function initGlobe() {
     diffuse: 1.2,
     mapSamples: 16000,
     mapBrightness: 6,
-    baseColor: [0.4, 0.4, 0.4], // Más claro para ver los continentes
+    baseColor: [1, 1, 1], // Blanco brillante (en modo dark=1 esto hace los continentes visibles)
     markerColor: [0.8, 0.1, 0.1], // Rojo Betrayer
-    glowColor: [0.05, 0.05, 0.05], // Resplandor oscuro
+    glowColor: [0.1, 0.1, 0.1], // Resplandor oscuro
     markers: markers,
     onRender: function(state) {
       if (focusTarget) {
@@ -140,8 +140,8 @@ function initGlobe() {
         currentPhi += (targetPhi - currentPhi) * 0.05;
         currentTheta += (targetTheta - currentTheta) * 0.05;
       } else {
-        // Rotación libre por defecto
-        currentPhi += 0.003;
+        // Rotación libre por defecto (aumentado para que se note)
+        currentPhi += 0.01;
         // Si theta estaba en otro ángulo, lo devolvemos suavemente al centro (0)
         currentTheta += (0 - currentTheta) * 0.05; 
       }
