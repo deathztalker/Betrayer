@@ -126,9 +126,9 @@ function initGlobe() {
     diffuse: 1.2,
     mapSamples: 16000,
     mapBrightness: 6,
-    baseColor: [1, 1, 1], // Blanco brillante (en modo dark=1 esto hace los continentes visibles)
-    markerColor: [0.8, 0.1, 0.1], // Rojo Betrayer
-    glowColor: [0.1, 0.1, 0.1], // Resplandor oscuro
+    baseColor: [0.3, 0.3, 0.3], 
+    markerColor: [0.8, 0.1, 0.1], 
+    glowColor: [1, 1, 1],
     markers: markers,
     onRender: function(state) {
       if (focusTarget) {
