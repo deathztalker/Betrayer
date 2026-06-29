@@ -163,7 +163,7 @@ function initGlobe() {
     mapBrightness: 6,
     baseColor: [0.3, 0.3, 0.3], // En dark: 1, los puntos son 1 - baseColor. Así que 1 - 0.3 = 0.7 (gris claro)
     markerColor: [0.8, 0.1, 0.1], 
-    glowColor: [0.1, 0.1, 0.1], // Resplandor leve
+    glowColor: [1, 1, 1], // Resplandor blanco (por defecto en cobe)
     markers: markers,
     onRender: function(state) {
       if (isDragging) {
