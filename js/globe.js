@@ -5,9 +5,17 @@ var globeModal = document.getElementById('globe-modal');
 var globeOverlay = document.getElementById('globe-overlay');
 var globeClose = document.getElementById('globe-close');
 var canvas = document.getElementById('globe-canvas');
+var cityListEl = document.getElementById('globe-city-list');
+
 var globeInstance = null;
 var hasLoaded = false;
 var markers = [];
+var citiesList = [];
+
+// Focus state
+var focusTarget = null;
+var currentPhi = 0;
+var currentTheta = 0;
 
 if (globeBtn && globeModal && canvas) {
   globeBtn.addEventListener('click', function() {
@@ -34,6 +42,30 @@ if (globeBtn && globeModal && canvas) {
 function closeGlobe() {
   globeModal.classList.remove('active');
   globeModal.setAttribute('aria-hidden', 'true');
+  focusTarget = null; // reset focus
+}
+
+function renderCityList() {
+  if (!cityListEl) return;
+  cityListEl.innerHTML = '';
+  
+  if (citiesList.length === 0) {
+    cityListEl.innerHTML = '<li class="empty-state">No hay visitas registradas aún.</li>';
+    return;
+  }
+  
+  citiesList.forEach(function(city) {
+    var li = document.createElement('li');
+    li.style.cursor = 'pointer';
+    li.innerHTML = '<span class="city-name">' + city.name + '</span><span class="city-count">' + city.count + '</span>';
+    
+    // Al hacer clic, hacemos focus en el globo
+    li.addEventListener('click', function() {
+      focusTarget = { lat: city.lat, lng: city.lng };
+    });
+    
+    cityListEl.appendChild(li);
+  });
 }
 
 function loadGlobeData() {
@@ -42,31 +74,44 @@ function loadGlobeData() {
     if (doc.exists) {
       var data = doc.data();
       if (data.locations) {
-        // Parse locations map {"lat,lng": count}
         for (var key in data.locations) {
           var parts = key.split(',');
           if (parts.length === 2) {
             var lat = parseFloat(parts[0]);
             var lng = parseFloat(parts[1]);
-            var count = data.locations[key];
-            // Cap size between 0.05 and 0.15 based on counts
+            var locData = data.locations[key];
+            
+            var count = 0;
+            var name = "Ubicación Desconocida";
+            
+            if (typeof locData === 'number') {
+              count = locData;
+            } else {
+              count = locData.count || 0;
+              name = locData.name || name;
+            }
+            
             var size = Math.min(0.15, 0.05 + (count * 0.01));
             markers.push({ location: [lat, lng], size: size });
+            
+            citiesList.push({ name: name, count: count, lat: lat, lng: lng });
           }
         }
       }
     }
+    
+    // Sort cities by count descending
+    citiesList.sort(function(a, b) { return b.count - a.count; });
+    renderCityList();
+    
     initGlobe();
   }).catch(function(err) {
     console.error('Error fetching globe locations:', err);
-    initGlobe(); // Initialize even without markers
+    initGlobe();
   });
 }
 
 function initGlobe() {
-  var phi = 0;
-  
-  // Configuración para que el canvas se vea bien en pantallas retina
   var dpr = window.devicePixelRatio || 1;
   var width = canvas.offsetWidth;
   var height = canvas.offsetHeight;
@@ -81,15 +126,28 @@ function initGlobe() {
     diffuse: 1.2,
     mapSamples: 16000,
     mapBrightness: 6,
-    baseColor: [0.1, 0.1, 0.1], // Oscuro / Metal
+    baseColor: [0.4, 0.4, 0.4], // Más claro para ver los continentes
     markerColor: [0.8, 0.1, 0.1], // Rojo Betrayer
-    glowColor: [0.1, 0.1, 0.1],
+    glowColor: [0.05, 0.05, 0.05], // Resplandor oscuro
     markers: markers,
     onRender: function(state) {
-      // Rotación lenta
-      state.phi = phi;
-      phi += 0.003;
+      if (focusTarget) {
+        // Enfoque a una ciudad específica
+        var targetPhi = Math.PI - focusTarget.lng * Math.PI / 180 - Math.PI / 2;
+        var targetTheta = focusTarget.lat * Math.PI / 180;
+        
+        // Easing (transición suave) hacia el punto
+        currentPhi += (targetPhi - currentPhi) * 0.05;
+        currentTheta += (targetTheta - currentTheta) * 0.05;
+      } else {
+        // Rotación libre por defecto
+        currentPhi += 0.003;
+        // Si theta estaba en otro ángulo, lo devolvemos suavemente al centro (0)
+        currentTheta += (0 - currentTheta) * 0.05; 
+      }
+      
+      state.phi = currentPhi;
+      state.theta = currentTheta;
     }
   });
 }
-

@@ -993,8 +993,16 @@
       <h3 data-i18n="globe.title">Visitantes Globales</h3>
       <p data-i18n="globe.desc">Desde dónde nos escuchan</p>
     </div>
-    <div class="globe-canvas-container">
-      <canvas id="globe-canvas" width="600" height="600"></canvas>
+    <div class="globe-layout">
+      <div class="globe-canvas-container">
+        <canvas id="globe-canvas" width="600" height="600"></canvas>
+      </div>
+      <div class="globe-leaderboard">
+        <h4>Top Ciudades</h4>
+        <ul id="globe-city-list">
+          <li class="empty-state">Cargando datos...</li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>

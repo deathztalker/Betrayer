@@ -173,21 +173,34 @@
           var lng = parseFloat(geo.longitude).toFixed(1);
           var coordKey = lat + "," + lng;
           
+          var cityName = geo.city || geo.region || "Ubicación Desconocida";
+          var countryName = geo.country || "";
+          var locName = countryName ? cityName + ", " + countryName : cityName;
+          
           db.runTransaction(function (transaction) {
             return transaction.get(counterRef).then(function (doc) {
               if (!doc.exists) {
                 var initialLocations = {};
-                initialLocations[coordKey] = 1;
+                initialLocations[coordKey] = { count: 1, name: locName };
                 transaction.set(counterRef, { visits: 1, locations: initialLocations });
               } else {
                 var data = doc.data();
                 var newCount = (data.visits || 0) + 1;
                 var currentLocCount = 0;
+                var currentName = locName;
+                
                 if (data.locations && data.locations[coordKey]) {
-                  currentLocCount = data.locations[coordKey];
+                  // Support migration from old format where it was just a number
+                  if (typeof data.locations[coordKey] === 'number') {
+                    currentLocCount = data.locations[coordKey];
+                  } else {
+                    currentLocCount = data.locations[coordKey].count || 0;
+                    currentName = data.locations[coordKey].name || locName;
+                  }
                 }
+                
                 var newLocations = data.locations || {};
-                newLocations[coordKey] = currentLocCount + 1;
+                newLocations[coordKey] = { count: currentLocCount + 1, name: currentName };
                 
                 transaction.update(counterRef, { visits: newCount, locations: newLocations });
               }

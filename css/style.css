@@ -1821,7 +1821,7 @@ body.thrash-mode {
 .globe-modal-content {
   position: relative;
   width: 90%;
-  max-width: 600px;
+  max-width: 900px;
   background: var(--ink-soft);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -1874,10 +1874,27 @@ body.thrash-mode {
   font-size: 0.9rem;
   margin: 0;
 }
+
+/* Layout for Globe + Leaderboard */
+.globe-layout {
+  display: flex;
+  width: 100%;
+  gap: 30px;
+  align-items: center;
+  justify-content: center;
+}
+@media (max-width: 768px) {
+  .globe-layout {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
 .globe-canvas-container {
+  flex: 1 1 50%;
   width: 100%;
   aspect-ratio: 1 / 1;
-  max-width: 500px;
+  max-width: 450px;
   position: relative;
   display: flex;
   justify-content: center;
@@ -1887,4 +1904,94 @@ body.thrash-mode {
   width: 100% !important;
   height: 100% !important;
   contain: layout paint size;
+}
+
+.globe-leaderboard {
+  flex: 1 1 50%;
+  width: 100%;
+  max-width: 400px;
+  max-height: 400px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+}
+.globe-leaderboard h4 {
+  font-family: var(--font-title);
+  color: var(--bone);
+  text-transform: uppercase;
+  margin: 0 0 15px 0;
+  font-size: 1.2rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 10px;
+  letter-spacing: 0.05em;
+}
+#globe-city-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rust-dim) var(--ink-soft);
+}
+#globe-city-list::-webkit-scrollbar {
+  width: 6px;
+}
+#globe-city-list::-webkit-scrollbar-track {
+  background: var(--ink-soft);
+}
+#globe-city-list::-webkit-scrollbar-thumb {
+  background-color: var(--rust-dim);
+  border-radius: 3px;
+}
+#globe-city-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255,255,255,0.02);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+#globe-city-list li:hover {
+  background: rgba(255,255,255,0.05);
+}
+#globe-city-list li .city-name {
+  color: var(--bone);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#globe-city-list li .city-name::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--rust);
+  border-radius: 50%;
+  box-shadow: 0 0 5px var(--rust);
+  flex-shrink: 0;
+}
+#globe-city-list li .city-count {
+  color: var(--rust);
+  font-weight: bold;
+  font-family: var(--font-title);
+  flex-shrink: 0;
+}
+#globe-city-list li.empty-state {
+  color: var(--bone-dim);
+  text-align: center;
+  justify-content: center;
+  background: none;
+  font-style: italic;
 }
