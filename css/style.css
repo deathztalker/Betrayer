@@ -1773,3 +1773,118 @@ body.thrash-mode {
   width: 18px;
   height: 18px;
 }
+
+/* ============================= GLOBE VISITS ============================= */
+.globe-btn {
+  background: transparent;
+  border: 1px solid var(--rust);
+  color: var(--rust);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s var(--ease);
+  margin-left: 10px;
+}
+.globe-btn:hover {
+  background: var(--rust);
+  color: var(--ink);
+  transform: scale(1.1) rotate(15deg);
+  box-shadow: 0 0 10px rgba(186,24,27,0.5);
+}
+
+.globe-modal {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s var(--ease), visibility 0.3s;
+}
+.globe-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+.globe-modal-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.globe-modal-content {
+  position: relative;
+  width: 90%;
+  max-width: 600px;
+  background: var(--ink-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: scale(0.95);
+  transition: transform 0.3s var(--ease);
+}
+.globe-modal.active .globe-modal-content {
+  transform: scale(1);
+}
+.globe-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  color: var(--bone);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s;
+  z-index: 2;
+}
+.globe-modal-close:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--rust);
+}
+.globe-header {
+  text-align: center;
+  margin-bottom: 20px;
+  width: 100%;
+}
+.globe-header h3 {
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  color: var(--bone);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 5px 0;
+}
+.globe-header p {
+  color: var(--bone-dim);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.globe-canvas-container {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 500px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.globe-canvas-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  contain: layout paint size;
+}

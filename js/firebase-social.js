@@ -164,17 +164,50 @@
     // Only increment once per session (prevents inflating on refreshes)
     if (!sessionStorage.getItem('betrayer_visited')) {
       sessionStorage.setItem('betrayer_visited', '1');
-
-      db.runTransaction(function (transaction) {
-        return transaction.get(counterRef).then(function (doc) {
-          if (!doc.exists) {
-            transaction.set(counterRef, { visits: 1 });
-          } else {
-            var newCount = (doc.data().visits || 0) + 1;
-            transaction.update(counterRef, { visits: newCount });
-          }
+      
+      // Fetch location silently, then update Firestore
+      fetch('https://get.geojs.io/v1/ip/geo.json')
+        .then(function(res) { return res.json(); })
+        .then(function(geo) {
+          var lat = parseFloat(geo.latitude).toFixed(1);
+          var lng = parseFloat(geo.longitude).toFixed(1);
+          var coordKey = lat + "," + lng;
+          
+          db.runTransaction(function (transaction) {
+            return transaction.get(counterRef).then(function (doc) {
+              if (!doc.exists) {
+                var initialLocations = {};
+                initialLocations[coordKey] = 1;
+                transaction.set(counterRef, { visits: 1, locations: initialLocations });
+              } else {
+                var data = doc.data();
+                var newCount = (data.visits || 0) + 1;
+                var currentLocCount = 0;
+                if (data.locations && data.locations[coordKey]) {
+                  currentLocCount = data.locations[coordKey];
+                }
+                var newLocations = data.locations || {};
+                newLocations[coordKey] = currentLocCount + 1;
+                
+                transaction.update(counterRef, { visits: newCount, locations: newLocations });
+              }
+            });
+          });
+        })
+        .catch(function(err) {
+          // If geo fetch fails, just update visits without location
+          console.warn('Could not fetch location', err);
+          db.runTransaction(function (transaction) {
+            return transaction.get(counterRef).then(function (doc) {
+              if (!doc.exists) {
+                transaction.set(counterRef, { visits: 1 });
+              } else {
+                var newCount = (doc.data().visits || 0) + 1;
+                transaction.update(counterRef, { visits: newCount });
+              }
+            });
+          });
         });
-      });
     }
   }
 

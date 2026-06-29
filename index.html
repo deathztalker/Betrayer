@@ -906,6 +906,9 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
       <span id="visit-count">—</span> visitas
     </span>
+    <button class="globe-btn" id="globe-btn" aria-label="Ver mapa de visitas" title="Mapa de visitas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    </button>
   </div>
 </footer>
 
@@ -981,12 +984,30 @@
   </div>
 </div>
 
+<!-- ============================= GLOBE MODAL ============================= -->
+<div class="globe-modal" id="globe-modal" aria-hidden="true" role="dialog">
+  <div class="globe-modal-overlay" id="globe-overlay"></div>
+  <div class="globe-modal-content">
+    <button class="globe-modal-close" id="globe-close" aria-label="Cerrar mapa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    <div class="globe-header">
+      <h3 data-i18n="globe.title">Visitantes Globales</h3>
+      <p data-i18n="globe.desc">Desde dónde nos escuchan</p>
+    </div>
+    <div class="globe-canvas-container">
+      <canvas id="globe-canvas" width="600" height="600"></canvas>
+    </div>
+  </div>
+</div>
+
 <!-- Firebase SDK (compat) -->
 <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script defer src="js/firebase-social.js"></script>
 <script defer src="js/script.js"></script>
+<!-- Scripts de Globo 3D -->
+<script defer src="https://unpkg.com/cobe"></script>
+<script defer src="js/globe.js"></script>
 </body>
 </html>
 
