@@ -170,8 +170,8 @@ function initGlobe() {
       var deltaX = e.clientX - startX;
       var deltaY = e.clientY - startY;
       
-      currentPhi -= deltaX * 0.008; 
-      currentTheta -= deltaY * 0.008;
+      currentPhi += deltaX * 0.005; 
+      currentTheta += deltaY * 0.005;
       currentTheta = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, currentTheta));
       
       startX = e.clientX;
@@ -195,7 +195,7 @@ function initGlobe() {
     glowColor: [0.15, 0.02, 0.02],
     markers: markers,
     offset: [0, 0],
-    scale: 1.15,
+    scale: 1,
   });
 
   // Animate using cobe v2 API
@@ -203,7 +203,8 @@ function initGlobe() {
     if (isDragging) {
       // Drag controls phi/theta via pointermove
     } else if (focusTarget) {
-      var targetPhi = Math.PI - (focusTarget.lng * Math.PI / 180);
+      // Calculate angles based on standard Cobe projection
+      var targetPhi = focusTarget.lng * Math.PI / 180 + Math.PI;
       var targetTheta = focusTarget.lat * Math.PI / 180;
       // Clamp theta so globe doesn't tilt out of view
       targetTheta = Math.max(-0.6, Math.min(0.6, targetTheta));
@@ -219,4 +220,13 @@ function initGlobe() {
   }
   
   animate();
+
+  // Handle resize for responsiveness
+  window.addEventListener('resize', function() {
+    if (canvas && globeInstance) {
+      var newSize = canvas.offsetWidth;
+      // In Cobe, you can update width/height through the update function or recreate.
+      // But CSS object-fit already handles visual scaling if intrinsic size is fixed.
+    }
+  });
 }

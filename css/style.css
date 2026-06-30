@@ -2014,6 +2014,22 @@ body.thrash-mode {
   filter: drop-shadow(0 0 15px rgba(186, 24, 27, 0.3));
 }
 
+@media (max-width: 768px) {
+  .globe-layout {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .globe-canvas-container {
+    max-width: 250px;
+  }
+  .globe-sidebar {
+    width: 100%;
+  }
+  #globe-modal {
+    padding: 20px;
+  }
+}
+
 /* Tooltip bubble */
 .globe-tooltip {
   position: absolute;
