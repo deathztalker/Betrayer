@@ -195,7 +195,7 @@ function initGlobe() {
     glowColor: [0.15, 0.02, 0.02],
     markers: markers,
     offset: [0, 0],
-    scale: 1,
+    scale: 1.15,
   });
 
   // Animate using cobe v2 API
@@ -203,7 +203,7 @@ function initGlobe() {
     if (isDragging) {
       // Drag controls phi/theta via pointermove
     } else if (focusTarget) {
-      var targetPhi = Math.PI - (focusTarget.lng * Math.PI / 180) - Math.PI / 2;
+      var targetPhi = Math.PI - (focusTarget.lng * Math.PI / 180);
       var targetTheta = focusTarget.lat * Math.PI / 180;
       // Clamp theta so globe doesn't tilt out of view
       targetTheta = Math.max(-0.6, Math.min(0.6, targetTheta));
