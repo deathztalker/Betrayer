@@ -18,7 +18,16 @@ var focusTarget = null;
 var currentPhi = 0;
 var currentTheta = 0.2;
 
+// Tooltip element
+var tooltip = null;
+
 if (globeBtn && globeModal && canvas) {
+  // Create tooltip element
+  tooltip = document.createElement('div');
+  tooltip.className = 'globe-tooltip';
+  tooltip.style.display = 'none';
+  canvas.parentElement.appendChild(tooltip);
+
   globeBtn.addEventListener('click', function() {
     globeModal.classList.add('active');
     globeModal.setAttribute('aria-hidden', 'false');
@@ -43,6 +52,19 @@ function closeGlobe() {
   globeModal.classList.remove('active');
   globeModal.setAttribute('aria-hidden', 'true');
   focusTarget = null;
+  if (tooltip) tooltip.style.display = 'none';
+}
+
+function showTooltip(city) {
+  if (!tooltip) return;
+  tooltip.innerHTML = '<span class="tooltip-dot"></span><strong>' + city.name + '</strong><span class="tooltip-count">' + city.count + ' visita' + (city.count !== 1 ? 's' : '') + '</span>';
+  tooltip.style.display = 'flex';
+  
+  // Auto-hide after 4 seconds
+  clearTimeout(tooltip._timer);
+  tooltip._timer = setTimeout(function() {
+    tooltip.style.display = 'none';
+  }, 4000);
 }
 
 function renderCityList() {
@@ -61,6 +83,12 @@ function renderCityList() {
     
     li.addEventListener('click', function() {
       focusTarget = { lat: city.lat, lng: city.lng };
+      showTooltip(city);
+      
+      // Highlight active city
+      var allItems = cityListEl.querySelectorAll('li');
+      allItems.forEach(function(item) { item.classList.remove('active'); });
+      li.classList.add('active');
     });
     
     cityListEl.appendChild(li);
@@ -90,8 +118,8 @@ function loadGlobeData() {
               name = locData.name || name;
             }
             
-            var size = Math.min(0.15, 0.05 + (count * 0.01));
-            markers.push({ location: [lat, lng], size: size });
+            var size = Math.min(0.12, 0.04 + (count * 0.008));
+            markers.push({ location: [lat, lng], size: size, color: [1, 0.1, 0.1] });
             
             citiesList.push({ name: name, count: count, lat: lat, lng: lng });
           }
@@ -102,7 +130,6 @@ function loadGlobeData() {
     citiesList.sort(function(a, b) { return b.count - a.count; });
     renderCityList();
     
-    // Delay init slightly so modal layout is complete
     requestAnimationFrame(function() {
       initGlobe();
     });
@@ -130,6 +157,7 @@ function initGlobe() {
     startY = e.clientY;
     canvas.style.cursor = 'grabbing';
     focusTarget = null;
+    if (tooltip) tooltip.style.display = 'none';
   });
   
   window.addEventListener('pointerup', function() {
@@ -151,34 +179,34 @@ function initGlobe() {
     }
   });
 
-  // Create globe using cobe v2 API
+  // Cyberpunk dark globe 
   globeInstance = createGlobe(canvas, {
     devicePixelRatio: 2,
     width: size * 2,
     height: size * 2,
     phi: 0,
     theta: 0.2,
-    dark: 0,
+    dark: 1,
     diffuse: 1.2,
-    mapSamples: 16000,
+    mapSamples: 40000,
     mapBrightness: 6,
-    baseColor: [1, 1, 1],
-    markerColor: [0.8, 0.1, 0.1],
-    glowColor: [1, 1, 1],
+    baseColor: [0.3, 0.3, 0.3],
+    markerColor: [1, 0.1, 0.1],
+    glowColor: [0.15, 0.02, 0.02],
     markers: markers,
     offset: [0, 0],
     scale: 1,
   });
 
-  // Animate using requestAnimationFrame + globe.update() (cobe v2 pattern)
+  // Animate using cobe v2 API
   function animate() {
     if (isDragging) {
-      // Drag controls phi/theta via pointermove events
+      // Drag controls phi/theta via pointermove
     } else if (focusTarget) {
       var targetPhi = Math.PI - (focusTarget.lng * Math.PI / 180) - Math.PI / 2;
       var targetTheta = focusTarget.lat * Math.PI / 180;
-      currentPhi += (targetPhi - currentPhi) * 0.05;
-      currentTheta += (targetTheta - currentTheta) * 0.05;
+      currentPhi += (targetPhi - currentPhi) * 0.06;
+      currentTheta += (targetTheta - currentTheta) * 0.06;
     } else {
       currentPhi += 0.005;
       currentTheta += (0.2 - currentTheta) * 0.05;
