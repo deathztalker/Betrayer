@@ -170,8 +170,8 @@ function initGlobe() {
       var deltaX = e.clientX - startX;
       var deltaY = e.clientY - startY;
       
-      currentPhi += deltaX * 0.008; 
-      currentTheta += deltaY * 0.008;
+      currentPhi -= deltaX * 0.008; 
+      currentTheta -= deltaY * 0.008;
       currentTheta = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, currentTheta));
       
       startX = e.clientX;
@@ -188,7 +188,7 @@ function initGlobe() {
     theta: 0.2,
     dark: 1,
     diffuse: 1.2,
-    mapSamples: 40000,
+    mapSamples: 25000,
     mapBrightness: 6,
     baseColor: [0.3, 0.3, 0.3],
     markerColor: [1, 0.1, 0.1],
@@ -203,7 +203,7 @@ function initGlobe() {
     if (isDragging) {
       // Drag controls phi/theta via pointermove
     } else if (focusTarget) {
-      var targetPhi = -focusTarget.lng * Math.PI / 180;
+      var targetPhi = Math.PI - (focusTarget.lng * Math.PI / 180) - Math.PI / 2;
       var targetTheta = focusTarget.lat * Math.PI / 180;
       // Clamp theta so globe doesn't tilt out of view
       targetTheta = Math.max(-0.6, Math.min(0.6, targetTheta));
