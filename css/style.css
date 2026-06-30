@@ -42,6 +42,7 @@
 html {
   scroll-behavior: smooth;
   scroll-snap-type: y proximity;
+  overscroll-behavior-y: none;
 }
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior: auto; }
