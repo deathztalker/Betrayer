@@ -1899,6 +1899,7 @@ body.thrash-mode {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 .globe-canvas-container canvas {
   display: block;

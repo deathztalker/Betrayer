@@ -170,8 +170,8 @@ function initGlobe() {
       var deltaX = e.clientX - startX;
       var deltaY = e.clientY - startY;
       
-      currentPhi -= deltaX * 0.008; 
-      currentTheta -= deltaY * 0.008;
+      currentPhi += deltaX * 0.008; 
+      currentTheta += deltaY * 0.008;
       currentTheta = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, currentTheta));
       
       startX = e.clientX;
@@ -203,8 +203,10 @@ function initGlobe() {
     if (isDragging) {
       // Drag controls phi/theta via pointermove
     } else if (focusTarget) {
-      var targetPhi = Math.PI - (focusTarget.lng * Math.PI / 180) - Math.PI / 2;
+      var targetPhi = -focusTarget.lng * Math.PI / 180;
       var targetTheta = focusTarget.lat * Math.PI / 180;
+      // Clamp theta so globe doesn't tilt out of view
+      targetTheta = Math.max(-0.6, Math.min(0.6, targetTheta));
       currentPhi += (targetPhi - currentPhi) * 0.06;
       currentTheta += (targetTheta - currentTheta) * 0.06;
     } else {
