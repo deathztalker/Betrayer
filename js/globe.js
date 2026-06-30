@@ -203,8 +203,8 @@ function initGlobe() {
     if (isDragging) {
       // Drag controls phi/theta via pointermove
     } else if (focusTarget) {
-      // Calculate angles based on standard Cobe projection
-      var targetPhi = focusTarget.lng * Math.PI / 180 + Math.PI;
+      // Exact Cobe projection math
+      var targetPhi = Math.PI / 2 - (focusTarget.lng * Math.PI / 180);
       var targetTheta = focusTarget.lat * Math.PI / 180;
       // Clamp theta so globe doesn't tilt out of view
       targetTheta = Math.max(-0.6, Math.min(0.6, targetTheta));
