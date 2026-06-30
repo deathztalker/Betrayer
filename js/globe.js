@@ -112,9 +112,13 @@ function loadGlobeData() {
 }
 
 function initGlobe() {
-  var dpr = window.devicePixelRatio || 1;
-  var width = canvas.offsetWidth || 500;
-  var height = canvas.offsetHeight || 500;
+  // Match official cobe example: canvas style=500x500, attribute width/height=1000
+  var dpr = window.devicePixelRatio || 2;
+  var size = canvas.offsetWidth || 500;
+  
+  // Set canvas buffer size for retina
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
   
   canvas.style.cursor = 'grab';
   
@@ -127,7 +131,7 @@ function initGlobe() {
     startX = e.clientX;
     startY = e.clientY;
     canvas.style.cursor = 'grabbing';
-    focusTarget = null; // Cancelar focus si el usuario decide moverlo
+    focusTarget = null;
   });
   
   window.addEventListener('pointerup', function() {
@@ -142,8 +146,6 @@ function initGlobe() {
       
       currentPhi -= deltaX * 0.008; 
       currentTheta -= deltaY * 0.008;
-      
-      // Evitar que el globo se voltee por completo
       currentTheta = Math.max(-Math.PI/2.5, Math.min(Math.PI/2.5, currentTheta));
       
       startX = e.clientX;
@@ -151,33 +153,33 @@ function initGlobe() {
     }
   });
 
+  // Exact config from official cobe README, with dark:0
   globeInstance = createGlobe(canvas, {
     devicePixelRatio: dpr,
-    width: width * dpr,
-    height: height * dpr,
+    width: size * dpr,
+    height: size * dpr,
     phi: 0,
     theta: 0,
-    dark: 1, 
+    dark: 0,
     diffuse: 1.2,
+    scale: 1,
     mapSamples: 16000,
     mapBrightness: 6,
-    baseColor: [0.3, 0.3, 0.3], // En dark: 1, los puntos son 1 - baseColor. Así que 1 - 0.3 = 0.7 (gris claro)
-    markerColor: [0.8, 0.1, 0.1], 
-    glowColor: [1, 1, 1], // Resplandor blanco (por defecto en cobe)
+    baseColor: [0.3, 0.3, 0.3],
+    markerColor: [1, 0.5, 1],
+    glowColor: [1, 1, 1],
+    offset: [0, 0],
     markers: markers,
     onRender: function(state) {
       if (isDragging) {
-        // La rotación la controla el mouse en el evento pointermove
+        // Drag controls phi/theta via pointermove
       } else if (focusTarget) {
-        // Enfoque a una ciudad específica
         var targetPhi = Math.PI - (focusTarget.lng * Math.PI / 180) - Math.PI / 2;
         var targetTheta = focusTarget.lat * Math.PI / 180;
-        
         currentPhi += (targetPhi - currentPhi) * 0.05;
         currentTheta += (targetTheta - currentTheta) * 0.05;
       } else {
-        // Rotación libre por defecto
-        currentPhi += 0.005; // un poco más lento para que sea majestuoso
+        currentPhi += 0.01;
         currentTheta += (0 - currentTheta) * 0.05; 
       }
       

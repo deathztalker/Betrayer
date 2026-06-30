@@ -1901,9 +1901,9 @@ body.thrash-mode {
   align-items: center;
 }
 .globe-canvas-container canvas {
-  width: 100% !important;
-  height: 100% !important;
-  contain: layout paint size;
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
 .globe-leaderboard {
