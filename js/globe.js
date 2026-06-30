@@ -36,6 +36,7 @@ if (globeBtn && globeModal && canvas) {
       loadGlobeData();
       hasLoaded = true;
     }
+    document.body.style.overflow = 'hidden';
   });
 
   globeClose.addEventListener('click', closeGlobe);
@@ -53,6 +54,7 @@ function closeGlobe() {
   globeModal.setAttribute('aria-hidden', 'true');
   focusTarget = null;
   if (tooltip) tooltip.style.display = 'none';
+  document.body.style.overflow = '';
 }
 
 function showTooltip(city) {

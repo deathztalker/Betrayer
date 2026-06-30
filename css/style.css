@@ -1888,6 +1888,11 @@ body.thrash-mode {
     flex-direction: column;
     gap: 15px;
   }
+  .globe-canvas-container {
+    flex: none !important;
+    max-width: 280px !important;
+    margin: 0 auto;
+  }
 }
 
 .globe-canvas-container {
