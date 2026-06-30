@@ -1,4 +1,4 @@
-import createGlobe from 'https://esm.sh/cobe';
+import createGlobe from 'https://esm.sh/cobe@latest';
 
 var globeBtn = document.getElementById('globe-btn');
 var globeModal = document.getElementById('globe-modal');
@@ -11,11 +11,12 @@ var globeInstance = null;
 var hasLoaded = false;
 var markers = [];
 var citiesList = [];
+var animFrameId = null;
 
 // Focus state
 var focusTarget = null;
 var currentPhi = 0;
-var currentTheta = 0;
+var currentTheta = 0.2;
 
 if (globeBtn && globeModal && canvas) {
   globeBtn.addEventListener('click', function() {
@@ -31,7 +32,6 @@ if (globeBtn && globeModal && canvas) {
   globeClose.addEventListener('click', closeGlobe);
   globeOverlay.addEventListener('click', closeGlobe);
 
-  // Esc keys to close
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && globeModal.classList.contains('active')) {
       closeGlobe();
@@ -42,7 +42,7 @@ if (globeBtn && globeModal && canvas) {
 function closeGlobe() {
   globeModal.classList.remove('active');
   globeModal.setAttribute('aria-hidden', 'true');
-  focusTarget = null; // reset focus
+  focusTarget = null;
 }
 
 function renderCityList() {
@@ -59,7 +59,6 @@ function renderCityList() {
     li.style.cursor = 'pointer';
     li.innerHTML = '<span class="city-name">' + city.name + '</span><span class="city-count">' + city.count + '</span>';
     
-    // Al hacer clic, hacemos focus en el globo
     li.addEventListener('click', function() {
       focusTarget = { lat: city.lat, lng: city.lng };
     });
@@ -100,28 +99,27 @@ function loadGlobeData() {
       }
     }
     
-    // Sort cities by count descending
     citiesList.sort(function(a, b) { return b.count - a.count; });
     renderCityList();
     
-    initGlobe();
+    // Delay init slightly so modal layout is complete
+    requestAnimationFrame(function() {
+      initGlobe();
+    });
   }).catch(function(err) {
     console.error('Error fetching globe locations:', err);
-    initGlobe();
+    requestAnimationFrame(function() {
+      initGlobe();
+    });
   });
 }
 
 function initGlobe() {
-  // Match official cobe example: canvas style=500x500, attribute width/height=1000
-  var dpr = window.devicePixelRatio || 2;
   var size = canvas.offsetWidth || 500;
-  
-  // Set canvas buffer size for retina
-  canvas.width = size * dpr;
-  canvas.height = size * dpr;
   
   canvas.style.cursor = 'grab';
   
+  // Drag state
   var isDragging = false;
   var startX = 0;
   var startY = 0;
@@ -146,45 +144,49 @@ function initGlobe() {
       
       currentPhi -= deltaX * 0.008; 
       currentTheta -= deltaY * 0.008;
-      currentTheta = Math.max(-Math.PI/2.5, Math.min(Math.PI/2.5, currentTheta));
+      currentTheta = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, currentTheta));
       
       startX = e.clientX;
       startY = e.clientY;
     }
   });
 
-  // Exact config from official cobe README, with dark:0
+  // Create globe using cobe v2 API
   globeInstance = createGlobe(canvas, {
-    devicePixelRatio: dpr,
-    width: size * dpr,
-    height: size * dpr,
+    devicePixelRatio: 2,
+    width: size * 2,
+    height: size * 2,
     phi: 0,
-    theta: 0,
+    theta: 0.2,
     dark: 0,
     diffuse: 1.2,
-    scale: 1,
     mapSamples: 16000,
     mapBrightness: 6,
-    baseColor: [0.3, 0.3, 0.3],
-    markerColor: [1, 0.5, 1],
+    baseColor: [1, 1, 1],
+    markerColor: [0.8, 0.1, 0.1],
     glowColor: [1, 1, 1],
-    offset: [0, 0],
     markers: markers,
-    onRender: function(state) {
-      if (isDragging) {
-        // Drag controls phi/theta via pointermove
-      } else if (focusTarget) {
-        var targetPhi = Math.PI - (focusTarget.lng * Math.PI / 180) - Math.PI / 2;
-        var targetTheta = focusTarget.lat * Math.PI / 180;
-        currentPhi += (targetPhi - currentPhi) * 0.05;
-        currentTheta += (targetTheta - currentTheta) * 0.05;
-      } else {
-        currentPhi += 0.01;
-        currentTheta += (0 - currentTheta) * 0.05; 
-      }
-      
-      state.phi = currentPhi;
-      state.theta = currentTheta;
-    }
+    offset: [0, 0],
+    scale: 1,
   });
+
+  // Animate using requestAnimationFrame + globe.update() (cobe v2 pattern)
+  function animate() {
+    if (isDragging) {
+      // Drag controls phi/theta via pointermove events
+    } else if (focusTarget) {
+      var targetPhi = Math.PI - (focusTarget.lng * Math.PI / 180) - Math.PI / 2;
+      var targetTheta = focusTarget.lat * Math.PI / 180;
+      currentPhi += (targetPhi - currentPhi) * 0.05;
+      currentTheta += (targetTheta - currentTheta) * 0.05;
+    } else {
+      currentPhi += 0.005;
+      currentTheta += (0.2 - currentTheta) * 0.05;
+    }
+    
+    globeInstance.update({ phi: currentPhi, theta: currentTheta });
+    animFrameId = requestAnimationFrame(animate);
+  }
+  
+  animate();
 }
