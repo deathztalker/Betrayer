@@ -30,5 +30,13 @@
     "billing": "Maule Sur Rock Fest · Junto a Amatista, Electrica, Alaridos, Los Shantas y más",
     "ticketUrl": "https://www.portaldisc.com/",
     "flyer": null
+  },
+  {
+    "date": "2026-08-30",
+    "city": "Talca",
+    "venue": "Liverpool",
+    "billing": "Undercroft: The Killer Sword · Bandas Invitadas: Postumo Lumbre, Betrayer",
+    "ticketUrl": "https://www.defticket.cl/",
+    "flyer": "assets/undercroft-liverpool.jpg"
   }
 ]
